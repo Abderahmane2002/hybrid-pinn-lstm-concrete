@@ -1,5 +1,12 @@
 # Hybrid PINN for Moisture Transport in Concrete
 
+> **Revision branch (`paper-revision`).** The code used in the revised manuscript is the
+> `pinn_moisture/` package and the `scripts/` pipeline (cleaned data, finite-volume solver,
+> physics-embedded network, PINN and baselines). See `REVISION_NOTES.md` for the commands,
+> the list of fixes with respect to the notebooks, and the results. The notebooks are kept
+> unchanged for reference.
+
+
 Physics-Informed Neural Network framework for modeling moisture transport in cementitious materials using nonlinear diffusion and experimental saturation measurements.
 
 > This repository contains a PINN-based approach for reconstructing moisture fields and identifying transport parameters in concrete using global saturation data.

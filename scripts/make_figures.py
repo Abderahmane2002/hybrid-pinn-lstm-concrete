@@ -93,6 +93,40 @@ def fig_data_cleaning(raw, clean):
     save(fig, "fig_data_cleaning")
 
 
+def fig_workflow():
+    """Schematic of the physics-embedded network."""
+    from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
+    fig, ax = plt.subplots(figsize=(7.2, 2.9))
+    ax.set_xlim(0, 100)
+    ax.set_ylim(0, 40)
+    ax.axis("off")
+
+    def box(x, y, w, h, title, body, col):
+        ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.4,rounding_size=1.2",
+                                    fc=col + "1f", ec=col, lw=1.0))
+        ax.text(x + w / 2, y + h - 1.6, title, ha="center", va="top", fontweight="bold", fontsize=7.4,
+                linespacing=1.1)
+        ax.text(x + w / 2, y + h / 2 - 3.0, body, ha="center", va="center", fontsize=7.2, linespacing=1.35)
+
+    def arrow(x0, y0, x1, y1, col=C["data"], ls="-", rad=0.0):
+        ax.add_patch(FancyArrowPatch((x0, y0), (x1, y1), arrowstyle="-|>", mutation_scale=9, lw=1.0,
+                                     color=col, ls=ls, connectionstyle=f"arc3,rad={rad}"))
+
+    box(1, 20, 15, 16, "Mix\ncomposition", "w/b\nfly-ash fraction\nslag fraction", C["muted"])
+    box(21, 20, 17, 16, "Parameter\nnetwork", "$\\theta = g_w(\\mathbf{c})$\nMLP 3-16-16-2\n$\\log D_v,\\ \\log K_\\mathrm{int}$", C["pen"])
+    box(43, 20, 17, 16, "Diffusivity\nmodel", "$D(S;\\theta)$\nvapour + capillary\n(Chen et al.)", C["fd"])
+    box(65, 20, 17, 16, "Differentiable\nFV solver", "$\\partial_t S = \\partial_x(D\\,\\partial_x S)$\nimplicit, 60 cells\n$S(x,t)$", C["fd"])
+    box(85, 20, 14, 16, "Spatial\naverage", "$S_\\mathrm{avg}(t)$\n$=\\langle S\\rangle_x$", C["muted"])
+    box(68, 1, 31, 12, "Data misfit\n(training mixes)", "$\\mathcal{L}=\\langle (S_\\mathrm{avg}-S_\\mathrm{avg,exp})^2\\rangle$", C["mlp"])
+    for x0, x1 in ((16.8, 20.2), (38.8, 42.2), (60.8, 64.2), (82.8, 84.2)):
+        arrow(x0, 28, x1, 28)
+    arrow(92, 19.2, 92, 13.6)
+    arrow(67.2, 7, 29.5, 19.2, col=C["mlp"], ls="--", rad=-0.25)
+    ax.text(22, 3.0, "gradients by automatic\ndifferentiation through the solver", color=C["mlp"], fontsize=7.2,
+            ha="center")
+    save(fig, "fig_workflow")
+
+
 def fig_convergence():
     fig, axes = plt.subplots(1, 2, figsize=(7.2, 2.6))
     ax = axes[0]
@@ -299,6 +333,7 @@ def fig_forward():
 if __name__ == "__main__":
     data = pd.read_csv(ROOT / "data/processed/drying_clean.csv")
     raw = pd.read_csv(ROOT / "data/raw/tidy_dataset_correctedV1.csv")
+    fig_workflow()
     fig_data_cleaning(raw, data)
     data = data[data.reliable].reset_index(drop=True)
     if runs("pen"):
