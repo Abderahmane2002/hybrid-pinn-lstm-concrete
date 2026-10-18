@@ -182,7 +182,8 @@ def fig_parity():
 def fig_parameters():
     th = pd.read_csv(RES / "theta_all.csv")
     th["wb"] = th.Mix.str.split("-").str[1].astype(float)
-    fig, axes = plt.subplots(1, 2, figsize=(7.2, 2.8))
+    fig, axes = plt.subplots(1, 2, figsize=(7.2, 3.2))
+    fig.subplots_adjust(wspace=0.38, bottom=0.30)
     labels = {"log10_Dv": r"$\log_{10} D_v$ (m$^2$/s)", "log10_K": r"$\log_{10} K_\mathrm{int}$ (m$^2$)"}
     for ax, k, letter in zip(axes, ["log10_Dv", "log10_K"], "ab"):
         for fam, mk in MARK.items():
@@ -201,7 +202,7 @@ def fig_parameters():
     h = [plt.Line2D([], [], marker=m, ls="", color=C["muted"], label=f) for f, m in MARK.items()]
     h += [plt.Line2D([], [], marker="o", ls="", color=C["pen"], label="Physics-embedded net (from composition)"),
           plt.Line2D([], [], marker="o", ls="", mfc="none", mec=C["fd"], label="Classical FD fit (per mix)")]
-    fig.legend(handles=h, loc="lower center", ncol=5, bbox_to_anchor=(0.5, -0.12), handletextpad=0.2,
+    fig.legend(handles=h, loc="lower center", ncol=5, bbox_to_anchor=(0.5, -0.02), handletextpad=0.2,
                columnspacing=0.8)
     save(fig, "fig_parameters")
 
@@ -211,6 +212,7 @@ def fig_diffusivity():
     cfg = PhysicsConfig()
     S = np.linspace(0.005, 1.0, 400)
     fig, axes = plt.subplots(1, 2, figsize=(7.2, 2.7))
+    fig.subplots_adjust(wspace=0.35)
     ax = axes[0]
     mix = "C-0.4"
     p = theta_to_physical({k: th.loc[mix, f"{k}_pen"] for k in cfg.identified}, cfg)
@@ -257,7 +259,7 @@ def fig_profiles(data):
             if S_p is not None:
                 ax.plot(xf * cfg.L * 1e3, S_p[i], ":", color=col, lw=1.1)
         ax.set_title(mix + (" (unseen)" if mix in TEST else ""))
-        ax.set_xlabel("Depth from drying face (mm)")
+        ax.set_xlabel("Depth from the drying face (mm)" if letter == "b" else "Depth (mm)")
         ax.set_xlim(0, cfg.L * 1e3)
         ax.set_ylim(0, 1.02)
         panel(ax, letter)
@@ -265,12 +267,13 @@ def fig_profiles(data):
     h, l = axes[0].get_legend_handles_labels()
     h += [plt.Line2D([], [], color=C["data"], ls="-", label="Physics-embedded net"),
           plt.Line2D([], [], color=C["data"], ls=":", lw=1.1, label="PINN")]
-    axes[2].legend(handles=h, loc="lower right", ncol=2)
+    fig.legend(handles=h, loc="lower center", ncol=6, bbox_to_anchor=(0.5, -0.14))
     save(fig, "fig_profiles")
 
 
 def fig_forward():
     fig, axes = plt.subplots(1, 2, figsize=(7.2, 3.0))
+    fig.subplots_adjust(wspace=0.4)
     for ax, meth, title, letter in ((axes[0], "pinn", "PINN", "a"), (axes[1], "pen", "Physics-embedded net", "b")):
         f = RES / f"forward_verification_{meth}.csv"
         if not f.exists():

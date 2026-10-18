@@ -1,0 +1,163 @@
+{
+  "n_points": 932,
+  "n_mixes": 20,
+  "n_train_points": 654,
+  "n_test_points": 278,
+  "methods_test": {
+    "fdfit": {
+      "r2_mean": 0.99872,
+      "r2_sd": NaN,
+      "rmse_mean": 0.00593,
+      "rmse_sd": NaN,
+      "mae_mean": 0.00467,
+      "time_s": 20.39255,
+      "n_seeds": 1
+    },
+    "fdreg": {
+      "r2_mean": 0.99375,
+      "r2_sd": NaN,
+      "rmse_mean": 0.01311,
+      "rmse_sd": NaN,
+      "mae_mean": 0.01052,
+      "time_s": 364.02899,
+      "n_seeds": 1
+    },
+    "mlp": {
+      "r2_mean": 0.98519,
+      "r2_sd": 0.00121,
+      "rmse_mean": 0.02018,
+      "rmse_sd": 0.00085,
+      "mae_mean": 0.01272,
+      "time_s": 8.67274,
+      "n_seeds": 5
+    },
+    "pen": {
+      "r2_mean": 0.99354,
+      "r2_sd": 0.0001,
+      "rmse_mean": 0.01333,
+      "rmse_sd": 0.00011,
+      "mae_mean": 0.01055,
+      "time_s": 291.35253,
+      "n_seeds": 5
+    },
+    "pinn": {
+      "r2_mean": 0.98262,
+      "r2_sd": 0.00713,
+      "rmse_mean": 0.02159,
+      "rmse_sd": 0.00432,
+      "mae_mean": 0.01481,
+      "time_s": 438.15548,
+      "n_seeds": 3
+    },
+    "pinn_nopde": {
+      "r2_mean": 0.94107,
+      "r2_sd": 0.06405,
+      "rmse_mean": 0.03646,
+      "rmse_sd": 0.02098,
+      "mae_mean": 0.0253,
+      "time_s": 197.37666,
+      "n_seeds": 3
+    }
+  },
+  "methods_train": {
+    "mlp": {
+      "r2": 0.99867,
+      "rmse": 0.00591
+    },
+    "pen": {
+      "r2": 0.99402,
+      "rmse": 0.01254
+    },
+    "pinn": {
+      "r2": 0.99959,
+      "rmse": 0.00327
+    },
+    "pinn_nopde": {
+      "r2": 0.99964,
+      "rmse": 0.00309
+    }
+  },
+  "theta_pen_log10_Dv_range": [
+    -9.781861573204974,
+    -8.956853482915372
+  ],
+  "theta_fd_log10_Dv_range": [
+    -9.823534947917285,
+    -9.018705319048836
+  ],
+  "theta_pen_vs_fd_log10_Dv_mae": 0.023780098535142978,
+  "theta_pen_vs_fd_log10_Dv_corr": 0.991156415515934,
+  "theta_pen_log10_Dv_seed_sd_mean": 0.0010951970990212652,
+  "theta_pen_log10_K_range": [
+    -19.778061440798883,
+    -19.53992282979808
+  ],
+  "theta_fd_log10_K_range": [
+    -19.895491340785345,
+    -19.004836894940997
+  ],
+  "theta_pen_vs_fd_log10_K_mae": 0.1684708081763171,
+  "theta_pen_vs_fd_log10_K_corr": 0.6937039736347379,
+  "theta_pen_log10_K_seed_sd_mean": 0.0053172082078354835,
+  "forward_pen_fd_vs_model_all": {
+    "r2": 0.9998354412585846,
+    "rmse": 0.0020924037100026075,
+    "mae": 0.0018647336848399922
+  },
+  "forward_pen_fd_vs_data_all": {
+    "r2": 0.9935156466009547,
+    "rmse": 0.013146745528138586,
+    "mae": 0.010375006023509185
+  },
+  "forward_pen_fd_vs_model_test": {
+    "r2": 0.9998438463217415,
+    "rmse": 0.0020473342780626806,
+    "mae": 0.0018223204154309862
+  },
+  "forward_pen_fd_vs_data_test": {
+    "r2": 0.9931115620264387,
+    "rmse": 0.013771795114353712,
+    "mae": 0.011107501211246023
+  },
+  "theta_pinn_log10_Dv_range": [
+    -9.707818637738084,
+    -9.121347701994557
+  ],
+  "theta_pinn_vs_fd_log10_Dv_mae": 0.0629565900169772,
+  "theta_pinn_vs_fd_log10_Dv_corr": 0.9848573652528624,
+  "theta_pinn_log10_Dv_seed_sd_mean": 0.02009985060100458,
+  "theta_pinn_log10_K_range": [
+    -20.97068164419466,
+    -20.305256029402617
+  ],
+  "theta_pinn_vs_fd_log10_K_mae": 1.0879681381815174,
+  "theta_pinn_vs_fd_log10_K_corr": 0.46426697634696507,
+  "theta_pinn_log10_K_seed_sd_mean": 0.024992870564802244,
+  "forward_pinn_fd_vs_model_all": {
+    "r2": 0.8597367319999157,
+    "rmse": 0.06127839494890072,
+    "mae": 0.05073951732122976
+  },
+  "forward_pinn_fd_vs_data_all": {
+    "r2": 0.8741447155890091,
+    "rmse": 0.05791894551652998,
+    "mae": 0.047580619478829786
+  },
+  "forward_pinn_fd_vs_model_test": {
+    "r2": 0.8494682747729144,
+    "rmse": 0.0649052487331817,
+    "mae": 0.05435776602208177
+  },
+  "forward_pinn_fd_vs_data_test": {
+    "r2": 0.8968618509724018,
+    "rmse": 0.053289278892716445,
+    "mae": 0.0437428502378014
+  },
+  "classical_calibration": {
+    "r2_min": 0.9945315324305786,
+    "r2_median": 0.9987630195211938,
+    "rmse_median": 0.005351740312362701,
+    "time_per_mix_s": 24.319213962554933,
+    "n_K_at_bound": 0
+  }
+}

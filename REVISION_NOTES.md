@@ -52,3 +52,30 @@ parameters per mix are identifiable from an average-saturation curve. The model
 therefore identifies log10 D_v and log10 K_int per mix, with α0 = 0.05 fixed and
 n = 2 shared by all mixes (value minimising the total misfit, see
 `results/identifiability.md`).
+
+## Results (six unseen mixes, 278 points; training on 654 points of 14 mixes)
+
+| Method | R² | RMSE | seeds |
+|---|---|---|---|
+| Physics-embedded network (FV solver + composition MLP) | 0.9935 ± 0.0001 | 0.0133 ± 0.0001 | 5 |
+| Classical FD + linear regression of parameters on composition | 0.9938 | 0.0131 | 1 |
+| Data-driven network | 0.9852 ± 0.0012 | 0.0202 ± 0.0008 | 5 |
+| PINN (composition-aware) | 0.9826 ± 0.0071 | 0.0216 ± 0.0043 | 3 |
+| PINN without PDE residual (ablation) | 0.9411 ± 0.0640 | 0.0365 ± 0.0210 | 3 |
+| Reference: classical FD fitted to each test mix (uses the test data) | 0.9987 | 0.0059 | 1 |
+
+Physical consistency (FD solver run with the parameters returned by each network, no fitting):
+
+* physics-embedded network: R² = 0.9998, RMSE = 0.0021
+* PINN: R² = 0.860, RMSE = 0.061
+  (log10 K_int biased by 1.09 decades with respect to the classical fits)
+
+Parameter agreement with the classical per-mix fits (physics-embedded network):
+log10 D_v MAE = 0.024 (r = 0.991),
+log10 K_int MAE = 0.168 (r = 0.694).
+
+Known limitation of the PINN: it falls into the "trivial dry solution" failure mode
+(field collapses to S_e shortly after t = 0) unless the drying-front speed is bounded
+(`a_front`, `s_front` in `TrainConfig`). Even with this bound, the PINN reproduces the
+data but the PDE is only approximately satisfied in the high-saturation (capillary)
+regime, so K_int is not identified reliably. See `scripts/` and `results/` for all runs.
