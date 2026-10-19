@@ -209,3 +209,4 @@ __marimo__/
 # revision branch: large binaries
 results/runs/*/model.pt
 results/*/runs/*/model.pt
+paper/build/out/

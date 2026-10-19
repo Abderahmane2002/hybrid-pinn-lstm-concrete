@@ -31,7 +31,7 @@ TEST = ["C-0.4", "C-0.5", "F10S10-0.3", "F20-0.3", "F20S20-0.4", "S40-0.4"]
 C = {"pen": "#2a78d6", "pinn": "#6250d6", "mlp": "#eb6834", "fd": "#1baf7a", "data": "#2b2b2b",
      "muted": "#8a8984", "grid": "#e4e3df", "B": "#2a78d6", "A": "#eb6834"}
 MARK = {"C": "o", "F20": "s", "F40": "D", "S20": "^", "S40": "v", "F10S10": "P", "F20S20": "X"}
-LABEL = {"pen": "PENN", "fdreg": "FD + regression", "mlp": "Data-driven net", "pinn": "PINN"}
+LABEL = {"pen": "PENN", "fdreg": "Classical + regression", "mlp": "Data-driven network", "pinn": "PINN"}
 plt.rcParams.update({
     "font.family": "serif", "font.serif": ["DejaVu Serif"], "mathtext.fontset": "dejavuserif",
     "font.size": 8.5, "axes.labelsize": 9, "axes.titlesize": 9, "legend.fontsize": 7.5,
@@ -270,7 +270,7 @@ def fig_forward():
             ax.plot(g.S_model, g.S_fd_model_theta, mk, ms=3, mfc="none", mew=0.7, color=col, label=lab)
         ax.plot([0, 1], [0, 1], "-", color=C["data"], lw=0.8)
         q = m[f"forward_{meth}_fd_vs_model_all"]
-        ax.text(0.97, 0.05, f"$R^2$ = {q['r2']:.3f}\nRMSE = {q['rmse']:.3f}", transform=ax.transAxes, ha="right")
+        ax.text(0.97, 0.05, f"$R^2$ = {q['r2']:.4f}\nRMSE = {q['rmse']:.3f}", transform=ax.transAxes, ha="right")
         ax.set_xlim(0, 0.85)
         ax.set_ylim(0, 0.85)
         ax.set_aspect("equal")
