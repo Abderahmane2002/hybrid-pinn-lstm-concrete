@@ -359,8 +359,8 @@ def fig_fields():
         for col, t in enumerate(times):
             ax = axes[row, col]
             im = ax.pcolormesh(r, z, S[:, :, col].T, cmap="Blues", vmin=0, vmax=1, shading="gouraud")
-            cs = ax.contour(r, z, S[:, :, col].T, levels=[0.25, 0.5, 0.75], colors="white", linewidths=0.6)
-            ax.clabel(cs, fontsize=5.5, fmt="%.2f", inline_spacing=2)
+            ax.contour(r, z, S[:, :, col].T, levels=[0.25, 0.5, 0.75], colors=["#333333", "white", "white"],
+                       linewidths=[1.0, 0.9, 0.9], linestyles=[":", "--", "-"])
             ax.set_aspect("equal")
             ax.grid(False)
             ax.set_title(f"{mix}, t = {t:g} d", fontsize=8)
@@ -371,6 +371,8 @@ def fig_fields():
             panel(ax, "abcdef"[row * 3 + col])
     cb = fig.colorbar(im, ax=axes, fraction=0.025, pad=0.02)
     cb.set_label("Saturation S")
+    for lev, ls, c in ((0.75, "-", "white"), (0.5, "--", "white"), (0.25, ":", "#333333")):
+        cb.ax.axhline(lev, color=c, lw=1.2, ls=ls)
     save(fig, "fig_fields")
 
 

@@ -279,7 +279,7 @@ The diffusivity varies by about an order of magnitude with saturation (Fig. 9). 
 
 Since the PENN runs the transport model, the saturation field inside the disc comes with every prediction (Fig. 10). After one day, a dry layer a few millimetres thick has formed along the exposed faces, while the centre is still almost saturated (S = «centre1d_C-0.4» for C-0.4). Drying then proceeds from the edge and the faces towards the centre, and the corner region dries first. The centre falls below S = 0.5 after about «tc_C-0.4» days for C-0.4, «tc_S40-0.4» days for S40-0.4 and «tc_F20-0.3» days for F20-0.3, which shows how strongly fly ash slows internal drying even when the average curves look similar at early ages. Such fields are what durability models need as initial conditions for chloride ingress or carbonation, and they are obtained here from a mass-loss test.
 
-![**Fig. 10.** Saturation in the disc (one quarter of the cross-section; drying faces at the top and right) predicted by the PENN for the withheld mixes C-0.4 and F20-0.3 after 1, 7 and 28 days.](fig3/fig_fields.png){width=6.5in}
+![**Fig. 10.** Saturation in the disc (one quarter of the cross-section; drying faces at the top and right) predicted by the PENN for the withheld mixes C-0.4 and F20-0.3 after 1, 7 and 28 days. Contours: $S$ = 0.75 (solid), 0.50 (dashed) and 0.25 (dotted).](fig3/fig_fields.png){width=6.5in}
 
 # 6 Discussion
 
