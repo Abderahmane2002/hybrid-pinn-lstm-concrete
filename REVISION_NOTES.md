@@ -9,7 +9,11 @@ produces every number, table and figure of the revised manuscript
 ```bash
 pip install -r requirements.txt
 python -m pytest tests/                     # solver checks (analytical, monotonicity, disc -> slab)
-bash scripts/run_all_disc.sh                # cleaning, classical fits, table, PENN/MLP x 5 seeds, noise, CV
+python scripts/clean_data.py                # data/processed/drying_clean.csv + cleaning_report.md
+python scripts/run_classical.py --geometry disc   # per-mix least-squares fits
+python scripts/profile_n.py --geometry disc  # choice of the shape exponent n
+python scripts/build_table.py               # tabulated disc solutions (~14 min, once)
+bash scripts/run_all_disc.sh                # PENN/MLP x 5 seeds, CV, noise, identifiability
 python scripts/run_experiments.py --geometry slab   # PINN comparison (1D slab)
 python scripts/verify_numerics.py           # results/numerical_verification.md
 python scripts/validate_geometry.py         # results/geometry_check.md (slab vs disc)
