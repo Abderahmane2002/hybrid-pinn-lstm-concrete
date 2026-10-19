@@ -68,3 +68,17 @@ class FDSolver:
         S = sol.y
         S_avg = (S * self.mesh.widths[:, None]).sum(0) / self.cfg.L
         return S_avg, S
+
+
+def make_solver(cfg: PhysicsConfig, **kw):
+    """Reference (BDF) forward solver for the geometry selected in ``cfg``.
+
+    Both solvers expose ``solve(theta, t_eval) -> (S_avg, fields)``.
+    """
+    if cfg.geometry == "slab":
+        return FDSolver(cfg, **kw)
+    if cfg.geometry == "disc":
+        from .axisym import AxisymBDF
+        kw.pop("n_cells", None)
+        return AxisymBDF(cfg, **{"nr": 24, "nz": 16, "ratio": 1.12, **kw})
+    raise ValueError(cfg.geometry)

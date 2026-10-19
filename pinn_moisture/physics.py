@@ -34,6 +34,12 @@ class PhysicsConfig:
     # geometry: 100 mm x 50 mm disc dried on all faces -> equivalent slab
     # half-thickness L = V / A_exposed = 12.5 mm (set 0.025 if the lateral face was sealed)
     L: float = 0.0125            # [m]
+    # geometry of the forward model: "disc" = axisymmetric disc dried on all faces
+    # (R_disc, H_disc = radius and half-thickness); "slab" = 1D slab of half-thickness L
+    geometry: str = "disc"
+    R_disc: float = 0.050        # [m]
+    table_path: str = ""         # tabulated disc solutions (table_solver.py); empty = direct solver
+    H_disc: float = 0.025        # [m]
     t_ref: float = 100.0         # [day] time scale used for non-dimensionalisation
     # boundary / initial conditions
     S_init: float = 1.0          # vacuum-saturated specimen
@@ -116,3 +122,19 @@ PARAM_RANGES = {"log10_Dv": "log10_Dv_range", "alpha0": "alpha0_range", "n": "n_
 
 def param_bounds(cfg: PhysicsConfig):
     return [getattr(cfg, PARAM_RANGES[k]) for k in cfg.identified]
+
+
+def config_for(geometry: str = "disc", **overrides) -> PhysicsConfig:
+    """Physics configuration used in the paper for each geometry.
+
+    disc : axisymmetric disc (main results); shared exponent n = 8 from the profile
+           in results/disc/profile_n.md (misfit levels off beyond n ~ 8).
+    slab : 1D equivalent slab (controlled comparison with the PINN); n = 2 from
+           results/identifiability.md.
+    """
+    cfg = PhysicsConfig(geometry=geometry, **overrides)
+    if geometry == "disc":
+        cfg.defaults = dict(cfg.defaults, n=8.0)
+        cfg.log10_Dv_range = overrides.get("log10_Dv_range", (-10.0, -7.5))
+        cfg.log10_K_range = overrides.get("log10_K_range", (-21.0, -18.5))
+    return cfg

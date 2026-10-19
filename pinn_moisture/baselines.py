@@ -15,7 +15,7 @@ import pandas as pd
 import torch
 import torch.nn as nn
 
-from .fd_solver import FDSolver
+from .fd_solver import make_solver
 from .physics import PhysicsConfig
 from .pinn import DTYPE, MLP, composition_features
 
@@ -61,7 +61,7 @@ def fd_regression(classical: pd.DataFrame, data: pd.DataFrame, train_mixes, test
         keep &= (tr[k] > lo + 1e-3) & (tr[k] < hi - 1e-3)
     X = feats(list(tr.index[keep]))
     coef = {k: np.linalg.lstsq(X, tr.loc[keep, k].to_numpy(), rcond=None)[0] for k in cfg.identified}
-    solver = FDSolver(cfg)
+    solver = make_solver(cfg)
     preds, thetas = [], []
     for mix in test_mixes:
         x = feats([mix])[0]

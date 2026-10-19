@@ -1,0 +1,177 @@
+disc pen_seed0: test RMSE = 0.0138 (2 s)
+disc pen_seed1: test RMSE = 0.0138 (3 s)
+disc pen_seed2: test RMSE = 0.0135 (1 s)
+disc pen_seed3: test RMSE = 0.0138 (1 s)
+disc pen_seed4: test RMSE = 0.0139 (1 s)
+disc mlp_seed0: test RMSE = 0.0202 (12 s)
+disc mlp_seed1: test RMSE = 0.0208 (12 s)
+disc mlp_seed2: test RMSE = 0.0208 (12 s)
+disc mlp_seed3: test RMSE = 0.0187 (12 s)
+disc mlp_seed4: test RMSE = 0.0204 (11 s)
+        r2_mean   r2_sd  rmse_mean  rmse_sd  mae_mean    time_s  n_seeds                                                   label
+method                                                                                                                          
+fdfit    0.9986     NaN     0.0063      NaN    0.0050   41.0240        1           Classical FD fitted to each mix (calibration)
+fdreg    0.9934     NaN     0.0135      NaN    0.0107  555.4174        1                   Classical FD + composition regression
+mlp      0.9852  0.0012     0.0202   0.0008    0.0127   11.7978        5                                     Data-driven network
+pen      0.9931  0.0002     0.0137   0.0002    0.0102    1.0678        5  Physics-embedded network (FV solver + composition MLP)
+method        Mix  r2_mean  r2_sd  rmse_mean  rmse_sd
+   pen      C-0.4   0.9916 0.0004     0.0133   0.0003
+   pen      C-0.5   0.9985 0.0002     0.0054   0.0004
+   pen F10S10-0.3   0.9957 0.0000     0.0109   0.0001
+   pen    F20-0.3   0.9939 0.0003     0.0123   0.0003
+   pen F20S20-0.4   0.9976 0.0000     0.0076   0.0001
+   pen    S40-0.4   0.9774 0.0007     0.0248   0.0004
+pen forward verification (FD with network parameters vs network): {'r2': 0.9999999615937557, 'rmse': 3.179168744207154e-05, 'mae': 2.278551656658331e-05}
+{
+ "n_points": 932,
+ "n_mixes": 20,
+ "n_train_points": 654,
+ "n_test_points": 278,
+ "theta_pen_log10_Dv_range": [
+  -9.154706414420927,
+  -8.360282741379638
+ ],
+ "theta_fd_log10_Dv_range": [
+  -9.209356402683978,
+  -8.370508010386084
+ ],
+ "theta_pen_vs_fd_log10_Dv_mae": 0.025337336183305935,
+ "theta_pen_vs_fd_log10_Dv_corr": 0.9892379342035104,
+ "theta_pen_log10_Dv_seed_sd_mean": 0.001107630691813448,
+ "theta_pen_log10_K_range": [
+  -19.824527482745957,
+  -19.521495195483645
+ ],
+ "theta_fd_log10_K_range": [
+  -20.04544435128703,
+  -19.33131786139052
+ ],
+ "theta_pen_vs_fd_log10_K_mae": 0.17814939371056743,
+ "theta_pen_vs_fd_log10_K_corr": 0.4849574378782473,
+ "theta_pen_log10_K_seed_sd_mean": 0.0027617717378967564
+}
+lomo C-0.3    fdreg       1 s
+lomo C-0.4    fdreg       1 s
+lomo C-0.5    fdreg       1 s
+lomo F10S10-0.3 fdreg       1 s
+lomo F10S10-0.5 fdreg       1 s
+lomo F10S10-0.4 fdreg       1 s
+lomo F20-0.4  fdreg       1 s
+lomo F20-0.3  fdreg       1 s
+lomo F20S20-0.3 fdreg       1 s
+lomo F20-0.5  fdreg       1 s
+lomo F20S20-0.4 fdreg       1 s
+lomo F20S20-0.5 fdreg       1 s
+lomo F40-0.3  fdreg       1 s
+lomo F40-0.4  fdreg       1 s
+lomo F40-0.5  fdreg       1 s
+lomo S20-0.3  fdreg       1 s
+lomo S40-0.3  fdreg       1 s
+lomo S20-0.4  fdreg       1 s
+lomo S40-0.4  fdreg       1 s
+lomo S40-0.5  fdreg       1 s
+lofo F10S10   fdreg       3 s
+lofo C        fdreg       3 s
+lofo F20      fdreg       3 s
+lofo F20S20   fdreg       3 s
+lofo S20      fdreg       2 s
+lofo F40      fdreg       3 s
+lofo S40      fdreg       3 s
+lomo C-0.3    mlp        17 s
+lomo C-0.4    mlp        16 s
+lomo C-0.5    mlp        13 s
+lomo F10S10-0.3 mlp        13 s
+lomo F10S10-0.4 mlp        12 s
+lomo F10S10-0.5 mlp        13 s
+lomo F20-0.3  mlp        12 s
+lomo F20-0.4  mlp        12 s
+lomo F20-0.5  mlp        12 s
+lomo F20S20-0.3 mlp        12 s
+lomo F20S20-0.4 mlp        12 s
+lomo F20S20-0.5 mlp        12 s
+lomo F40-0.3  mlp        12 s
+lomo F40-0.4  mlp        13 s
+lomo F40-0.5  mlp        12 s
+lomo S20-0.3  mlp        12 s
+lomo S20-0.4  mlp        13 s
+lomo S40-0.3  mlp        13 s
+lomo S40-0.4  mlp        13 s
+lomo S40-0.5  mlp        13 s
+lofo C        mlp        12 s
+lofo F10S10   mlp        12 s
+lofo F20      mlp        12 s
+lofo F20S20   mlp        11 s
+lofo F40      mlp        12 s
+lofo S20      mlp        13 s
+lomo C-0.3    pen         1 s
+lomo C-0.4    pen         1 s
+lomo C-0.5    pen         1 s
+lomo F10S10-0.3 pen         1 s
+lomo F10S10-0.4 pen         1 s
+lomo F10S10-0.5 pen         1 s
+lomo F20-0.3  pen         1 s
+lomo F20-0.4  pen         1 s
+lomo F20-0.5  pen         1 s
+lofo S40      mlp        12 s
+lomo F20S20-0.3 pen         1 s
+lomo F20S20-0.4 pen         1 s
+lomo F20S20-0.5 pen         1 s
+lomo F40-0.3  pen         1 s
+lomo F40-0.4  pen         1 s
+lomo F40-0.5  pen         1 s
+lomo S20-0.3  pen         1 s
+lomo S20-0.4  pen         1 s
+lomo S40-0.3  pen         1 s
+lomo S40-0.4  pen         1 s
+lomo S40-0.5  pen         1 s
+lofo C        pen         1 s
+lofo F10S10   pen         1 s
+lofo F20      pen         1 s
+lofo F20S20   pen         1 s
+lofo F40      pen         1 s
+lofo S20      pen         1 s
+lofo S40      pen         1 s
+scheme method  n_mixes  n_points     r2   rmse    mae  r2_mix_median  r2_mix_min  n_mix_r2_below_0.95
+  lofo  fdreg       20       932 0.9913 0.0152 0.0122         0.9907      0.9647                    0
+  lofo    mlp       20       932 0.9355 0.0415 0.0277         0.9765      0.2177                    7
+  lofo    pen       20       932 0.9903 0.0160 0.0128         0.9900      0.9677                    0
+  lomo  fdreg       20       932 0.9919 0.0147 0.0120         0.9915      0.9736                    0
+  lomo    mlp       20       932 0.9868 0.0188 0.0146         0.9892      0.9533                    0
+  lomo    pen       20       932 0.9909 0.0156 0.0123         0.9916      0.9746                    0
+disc pen_seed0_noise0.01: test RMSE = 0.0138 (2 s)
+disc pen_seed1_noise0.01: test RMSE = 0.0141 (2 s)
+disc pen_seed2_noise0.01: test RMSE = 0.0131 (1 s)
+disc pen_seed3_noise0.01: test RMSE = 0.0138 (1 s)
+disc pen_seed4_noise0.01: test RMSE = 0.0135 (1 s)
+disc mlp_seed0_noise0.01: test RMSE = 0.0214 (11 s)
+disc mlp_seed1_noise0.01: test RMSE = 0.0208 (11 s)
+disc mlp_seed2_noise0.01: test RMSE = 0.0228 (11 s)
+disc mlp_seed3_noise0.01: test RMSE = 0.0206 (11 s)
+disc mlp_seed4_noise0.01: test RMSE = 0.0202 (10 s)
+disc pen_seed1_noise0.02: test RMSE = 0.0145 (3 s)
+disc pen_seed0_noise0.02: test RMSE = 0.0138 (3 s)
+disc pen_seed2_noise0.02: test RMSE = 0.0128 (1 s)
+disc pen_seed3_noise0.02: test RMSE = 0.0139 (1 s)
+disc pen_seed4_noise0.02: test RMSE = 0.0133 (1 s)
+disc mlp_seed0_noise0.02: test RMSE = 0.0223 (11 s)
+disc mlp_seed1_noise0.02: test RMSE = 0.0209 (11 s)
+disc mlp_seed2_noise0.02: test RMSE = 0.0250 (10 s)
+disc mlp_seed3_noise0.02: test RMSE = 0.0231 (10 s)
+disc mlp_seed4_noise0.02: test RMSE = 0.0203 (10 s)
+# Identifiability study (disc; n = 8 when not identified)
+
+| Mix | identified | R² | RMSE | max \|ρ\| (pair) | cond(J) |
+|---|---|---|---|---|---|
+| C-0.4 | D_v, α0, K_int | 0.9974 | 0.0074 | 1.00 (D_v–α0) | 1.3e+03 |
+| C-0.4 | D_v, α0, n, K_int | 0.9989 | 0.0048 | 1.00 (α0–n) | 1.1e+04 |
+| C-0.4 | D_v, K_int | 0.9975 | 0.0073 | 0.77 (D_v–K_int) | 1.4e+01 |
+| F20-0.3 | D_v, α0, K_int | 0.9985 | 0.0061 | 1.00 (D_v–α0) | 1.5e+03 |
+| F20-0.3 | D_v, α0, n, K_int | 0.9985 | 0.0061 | 1.00 (D_v–α0) | 1.5e+06 |
+| F20-0.3 | D_v, K_int | 0.9984 | 0.0063 | 0.82 (D_v–K_int) | 1.2e+01 |
+| S40-0.5 | D_v, α0, K_int | 0.9988 | 0.0053 | 1.00 (D_v–α0) | 1.2e+03 |
+| S40-0.5 | D_v, α0, n, K_int | 0.9994 | 0.0036 | 0.99 (D_v–n) | 2.0e+04 |
+| S40-0.5 | D_v, K_int | 0.9988 | 0.0052 | 0.82 (D_v–K_int) | 1.6e+01 |
+| F20S20-0.5 | D_v, α0, K_int | 0.9993 | 0.0038 | 1.00 (α0–D_v) | 4.4e+02 |
+| F20S20-0.5 | D_v, α0, n, K_int | 0.9993 | 0.0038 | 1.00 (α0–D_v) | 4.3e+03 |
+| F20S20-0.5 | D_v, K_int | 0.9993 | 0.0038 | 0.72 (D_v–K_int) | 1.2e+01 |
+PIPELINE_DONE

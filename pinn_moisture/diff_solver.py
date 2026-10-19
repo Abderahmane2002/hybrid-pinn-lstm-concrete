@@ -81,6 +81,16 @@ class TorchFVSolver:
         return y0 + (y1 - y0) * (lq - x0) / (x1 - x0)
 
 
+def make_torch_solver(cfg: PhysicsConfig, t_max: float):
+    if cfg.geometry == "slab":
+        return TorchFVSolver(cfg, t_max=t_max)
+    if cfg.table_path:
+        from .table_solver import TableSolver
+        return TableSolver(cfg.table_path, cfg)
+    from .axisym import AxisymTorch
+    return AxisymTorch(cfg, t_max=t_max)
+
+
 class PhysicsEmbeddedNet(nn.Module):
     """theta(c) = lo + (hi - lo) * sigmoid(MLP(c)); S_avg = TorchFVSolver(theta)."""
 
@@ -130,7 +140,7 @@ class PENTrainer:
         self.cfg = cfg
         self.mixes, self.c, self.tq, self.sq, self.mask = _group(train_df)
         self.model = PhysicsEmbeddedNet(cfg, hidden, layers, per_mix=len(self.mixes) if per_mix else 0)
-        self.solver = TorchFVSolver(cfg, t_max=float(train_df.Time_d.max()) * 1.05 + 1)
+        self.solver = make_torch_solver(cfg, t_max=float(train_df.Time_d.max()) * 1.05 + 1)
         self.lr, self.iters, self.wd = lr, iters, weight_decay
         self.history = []
 
@@ -161,7 +171,7 @@ class PENTrainer:
     def predict(self, df):
         mixes, c, tq, _, mask = _group(df)
         th = self.model.theta(c)
-        solver = TorchFVSolver(self.cfg, t_max=float(df.Time_d.max()) * 1.05 + 1)
+        solver = make_torch_solver(self.cfg, t_max=float(df.Time_d.max()) * 1.05 + 1)
         s = solver.interp(solver.run({k: th[:, i] for i, k in enumerate(self.model.names)}), tq).numpy()
         out = np.empty(len(df))
         for i, m in enumerate(mixes):

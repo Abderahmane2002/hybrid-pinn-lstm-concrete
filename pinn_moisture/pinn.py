@@ -172,6 +172,8 @@ class CompositionPINN(nn.Module):
 
 class Trainer:
     def __init__(self, train_df, pcfg: PhysicsConfig, tcfg: TrainConfig):
+        if pcfg.geometry != "slab":
+            raise ValueError("the PINN is formulated for the 1D slab geometry only")
         torch.manual_seed(tcfg.seed)
         np.random.seed(tcfg.seed)
         self.pcfg, self.tcfg = pcfg, tcfg

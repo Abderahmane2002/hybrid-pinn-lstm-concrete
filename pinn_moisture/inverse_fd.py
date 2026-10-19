@@ -13,12 +13,12 @@ import time
 import numpy as np
 from scipy.optimize import least_squares
 
-from .fd_solver import FDSolver
+from .fd_solver import make_solver
 from .physics import PhysicsConfig, param_bounds
 
 
-def fit_mix(t, s_obs, cfg: PhysicsConfig, n_starts: int = 4, seed: int = 0, n_cells: int = 60):
-    solver = FDSolver(cfg, n_cells=n_cells)
+def fit_mix(t, s_obs, cfg: PhysicsConfig, n_starts: int = 4, seed: int = 0):
+    solver = make_solver(cfg, n_cells=60) if cfg.geometry == "slab" else make_solver(cfg)
     names = list(cfg.identified)
     lo, hi = np.array(param_bounds(cfg)).T
     rng = np.random.default_rng(seed)

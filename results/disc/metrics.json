@@ -1,0 +1,103 @@
+{
+  "n_points": 932,
+  "n_mixes": 20,
+  "n_train_points": 654,
+  "n_test_points": 278,
+  "methods_test": {
+    "fdfit": {
+      "r2_mean": 0.99856,
+      "r2_sd": NaN,
+      "rmse_mean": 0.0063,
+      "rmse_sd": NaN,
+      "mae_mean": 0.00503,
+      "time_s": 41.02403,
+      "n_seeds": 1
+    },
+    "fdreg": {
+      "r2_mean": 0.99341,
+      "r2_sd": NaN,
+      "rmse_mean": 0.01347,
+      "rmse_sd": NaN,
+      "mae_mean": 0.01069,
+      "time_s": 555.41744,
+      "n_seeds": 1
+    },
+    "mlp": {
+      "r2_mean": 0.98519,
+      "r2_sd": 0.00121,
+      "rmse_mean": 0.02018,
+      "rmse_sd": 0.00085,
+      "mae_mean": 0.01272,
+      "time_s": 11.7978,
+      "n_seeds": 5
+    },
+    "pen": {
+      "r2_mean": 0.99314,
+      "r2_sd": 0.00015,
+      "rmse_mean": 0.01374,
+      "rmse_sd": 0.00016,
+      "mae_mean": 0.01015,
+      "time_s": 1.06777,
+      "n_seeds": 5
+    }
+  },
+  "methods_train": {
+    "mlp": {
+      "r2": 0.99867,
+      "rmse": 0.00591
+    },
+    "pen": {
+      "r2": 0.99327,
+      "rmse": 0.0133
+    }
+  },
+  "theta_pen_log10_Dv_range": [
+    -9.154706414420927,
+    -8.360282741379638
+  ],
+  "theta_fd_log10_Dv_range": [
+    -9.209356402683978,
+    -8.370508010386084
+  ],
+  "theta_pen_vs_fd_log10_Dv_mae": 0.025337336183305935,
+  "theta_pen_vs_fd_log10_Dv_corr": 0.9892379342035104,
+  "theta_pen_log10_Dv_seed_sd_mean": 0.001107630691813448,
+  "theta_pen_log10_K_range": [
+    -19.824527482745957,
+    -19.521495195483645
+  ],
+  "theta_fd_log10_K_range": [
+    -20.04544435128703,
+    -19.33131786139052
+  ],
+  "theta_pen_vs_fd_log10_K_mae": 0.17814939371056743,
+  "theta_pen_vs_fd_log10_K_corr": 0.4849574378782473,
+  "theta_pen_log10_K_seed_sd_mean": 0.0027617717378967564,
+  "forward_pen_fd_vs_model_all": {
+    "r2": 0.9999999615937557,
+    "rmse": 3.179168744207154e-05,
+    "mae": 2.278551656658331e-05
+  },
+  "forward_pen_fd_vs_data_all": {
+    "r2": 0.9931974547961099,
+    "rmse": 0.013465442722730077,
+    "mae": 0.01024675329113046
+  },
+  "forward_pen_fd_vs_model_test": {
+    "r2": 0.9999999641487479,
+    "rmse": 3.0772640546689376e-05,
+    "mae": 2.1786941150596358e-05
+  },
+  "forward_pen_fd_vs_data_test": {
+    "r2": 0.9930571115080502,
+    "rmse": 0.01382611841168986,
+    "mae": 0.010175306741732035
+  },
+  "classical_calibration": {
+    "r2_min": 0.991678940078676,
+    "r2_median": 0.9985623595120319,
+    "rmse_median": 0.005994450479887101,
+    "time_per_mix_s": 40.078081977367404,
+    "n_K_at_bound": 0
+  }
+}

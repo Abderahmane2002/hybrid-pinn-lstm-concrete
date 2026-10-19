@@ -20,10 +20,11 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from pinn_moisture.baselines import fd_regression  # noqa: E402
-from pinn_moisture.fd_solver import FDSolver  # noqa: E402
-from pinn_moisture.physics import PhysicsConfig  # noqa: E402
+from pinn_moisture.fd_solver import make_solver  # noqa: E402
+from pinn_moisture.physics import config_for  # noqa: E402
 
-RES = ROOT / "results"
+RES = ROOT / "results" / "disc"
+GEOMETRY = "disc"
 TEST_MIXES = ["C-0.4", "C-0.5", "F10S10-0.3", "F20-0.3", "F20S20-0.4", "S40-0.4"]
 LABELS = {"pen": "Physics-embedded network (FV solver + composition MLP)", "pinn": "PINN", "pinn_nopde": "PINN without PDE residual", "mlp": "Data-driven network",
           "fdreg": "Classical FD + composition regression", "fdfit": "Classical FD fitted to each mix (calibration)"}
@@ -39,6 +40,8 @@ def metrics(obs, pred):
 def load_runs():
     runs = []
     for d in sorted((RES / "runs").glob("*_seed*")):
+        if "noise" in d.name:
+            continue
         if not (d / "pred.csv").exists():
             continue
         meta = json.loads((d / "meta.json").read_text())
@@ -51,7 +54,7 @@ def load_runs():
 def main():
     data = pd.read_csv(ROOT / "data/processed/drying_clean.csv")
     data = data[data.reliable].reset_index(drop=True)
-    cfg = PhysicsConfig()
+    cfg = config_for(GEOMETRY)
     classical = pd.read_csv(RES / "classical_fits.csv")
     classical = classical[classical.Mix.isin(data.Mix.unique())].reset_index(drop=True)
     runs = load_runs()
@@ -103,7 +106,7 @@ def main():
     # ---- parameters: networks vs classical FD ------------------------------------------
     theta_tab = classical[["Mix", *cfg.identified, *[f"se_{k}" for k in cfg.identified], "r2"]].rename(
         columns={**{k: f"{k}_fd" for k in cfg.identified}, "r2": "r2_fd"})
-    solver = FDSolver(cfg)
+    solver = make_solver(cfg)
     for meth in ("pen", "pinn"):
         mr = [(s_, th) for m_, s_, _, _, th in runs if m_ == meth and th is not None]
         if not mr:
@@ -150,4 +153,9 @@ def main():
 
 
 if __name__ == "__main__":
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--geometry", default="disc")
+    GEOMETRY = ap.parse_args().geometry
+    RES = ROOT / "results" / GEOMETRY
     main()

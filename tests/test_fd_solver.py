@@ -47,3 +47,18 @@ def test_differentiable_solver_matches_reference():
     q = s.interp(s.run({k: torch.tensor([v], dtype=DTYPE) for k, v in th.items()}),
                  torch.tensor(t[None, :], dtype=DTYPE)).numpy()[0]
     assert np.max(np.abs(q - ref)) < 5e-3
+
+
+def test_disc_reduces_to_slab_when_lateral_face_is_far():
+    """A very wide disc dried through its flat faces only behaves like a slab of half-thickness H."""
+    from pinn_moisture.axisym import AxisymBDF
+    from pinn_moisture.physics import config_for
+    cfg = config_for("disc", R_disc=2.0, H_disc=0.0125)
+    th = {"log10_Dv": -8.7, "log10_K": -19.6}
+    t = np.array([1.0, 5.0, 20.0])
+    s2, _ = AxisymBDF(cfg, nr=8, nz=24, ratio=1.0).solve(th, t)
+    cfg_s = config_for("disc")
+    cfg_s.geometry, cfg_s.L = "slab", 0.0125
+    s1, _ = FDSolver(cfg_s, n_cells=24, ratio=1.0).solve(th, t)
+    # the lateral face of a 2 m disc affects < 1% of the volume
+    assert np.max(np.abs(s2 - s1)) < 0.01

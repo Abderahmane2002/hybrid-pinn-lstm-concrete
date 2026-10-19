@@ -1,0 +1,6 @@
+# Profile of the shared exponent n (disc)
+
+| n | total SSE | mean R² | min R² |
+|---|---|---|---|
+| 5 | 0.01753 | 0.99743 | 0.99432 |
+| 6 | 0.01665 | 0.99753 | 0.99474 |
