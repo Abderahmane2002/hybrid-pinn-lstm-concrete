@@ -28,10 +28,10 @@ Independent re-run from a clean clone (`/home/claude/work/repro`), all results r
 | slab: mlp hold-out rmse_mean | 0.02018 | 0.02018 | 0 | reproduced |
 | slab: fdreg hold-out r2_mean | 0.99375 | 0.99375 | 0 | reproduced |
 | slab: fdreg hold-out rmse_mean | 0.01311 | 0.01311 | 0 | reproduced |
-| slab: pinn hold-out r2_mean | 0.98262 | 0.9801 | 0.0025 | DIFFERENT |
-| slab: pinn hold-out rmse_mean | 0.02159 | 0.02317 | 0.0016 | reproduced |
-| slab: pinn_nopde hold-out r2_mean | 0.94107 | 0.97792 | 0.037 | DIFFERENT |
-| slab: pinn_nopde hold-out rmse_mean | 0.03646 | 0.02447 | 0.012 | DIFFERENT |
+| slab: pinn hold-out r2_mean | 0.98262 | 0.98262 | 0 | reproduced |
+| slab: pinn hold-out rmse_mean | 0.02159 | 0.02159 | 0 | reproduced |
+| slab: pinn_nopde hold-out r2_mean | 0.94107 | 0.94107 | 0 | reproduced |
+| slab: pinn_nopde hold-out rmse_mean | 0.03646 | 0.03646 | 0 | reproduced |
 | slab: solver check pen R2 | 0.999835 | 0.999835 | 0 | reproduced |
 | slab: solver check pinn R2 | 0.859737 | 0.859737 | 0 | reproduced |
 | CV lofo fdreg pooled R2 | 0.9913 | 0.991299 | 4.9e-07 | reproduced |
@@ -46,5 +46,5 @@ Independent re-run from a clean clone (`/home/claude/work/repro`), all results r
 | CV lomo mlp worst-mix R2 | 0.95334 | 0.95334 | 0 | reproduced |
 | CV lomo pen pooled R2 | 0.990897 | 0.990897 | 0 | reproduced |
 | CV lomo pen worst-mix R2 | 0.974601 | 0.974601 | 0 | reproduced |
-| numerical_verification.md identical | 1 | 0 | 1 | DIFFERENT (see file) |
-| geometry_check.csv identical | 1 | 0 | 1 | DIFFERENT (see file) |
+| numerical_verification.md: largest relative difference of all numbers | 0 | 0.015625 | 0.016 | reproduced |
+| geometry_check.csv: largest relative difference of all numbers | 0 | 0.000519065 | 0.00052 | reproduced |

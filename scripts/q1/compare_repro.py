@@ -63,8 +63,9 @@ def main(repro: Path):
     import re
     for f, tol in (("numerical_verification.md", 0.05), ("geometry_check.csv", 0.01)):
         if (N / f).exists():
-            xa = np.array([float(x) for x in re.findall(r"-?\d+\.?\d*(?:e[-+]?\d+)?", (O / f).read_text())])
-            xb = np.array([float(x) for x in re.findall(r"-?\d+\.?\d*(?:e[-+]?\d+)?", (N / f).read_text())])
+            strip = lambda t: re.sub(r"build time [\d.]+ s", "", t)   # wall-clock time is not a result  # noqa: E731
+            xa = np.array([float(x) for x in re.findall(r"-?\d+\.?\d*(?:e[-+]?\d+)?", strip((O / f).read_text()))])
+            xb = np.array([float(x) for x in re.findall(r"-?\d+\.?\d*(?:e[-+]?\d+)?", strip((N / f).read_text()))])
             if len(xa) == len(xb):
                 rel = float(np.max(np.abs(xa - xb) / np.maximum(np.abs(xa), 1e-12)))
                 rows.append({"item": f"{f}: largest relative difference of all numbers", "manuscript": 0.0, "reproduced": rel,

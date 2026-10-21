@@ -23,10 +23,10 @@ slab: mlp hold-out r2_mean,0.98519,0.98519,0.0,0.0002,reproduced
 slab: mlp hold-out rmse_mean,0.02018,0.02018,0.0,0.0002,reproduced
 slab: fdreg hold-out r2_mean,0.99375,0.99375,0.0,0.0002,reproduced
 slab: fdreg hold-out rmse_mean,0.01311,0.01311,0.0,0.0002,reproduced
-slab: pinn hold-out r2_mean,0.98262,0.9801,0.0025200000000000777,0.002,DIFFERENT
-slab: pinn hold-out rmse_mean,0.02159,0.02317,0.001579999999999998,0.002,reproduced
-slab: pinn_nopde hold-out r2_mean,0.94107,0.97792,0.03685000000000005,0.002,DIFFERENT
-slab: pinn_nopde hold-out rmse_mean,0.03646,0.02447,0.01199,0.002,DIFFERENT
+slab: pinn hold-out r2_mean,0.98262,0.98262,0.0,0.002,reproduced
+slab: pinn hold-out rmse_mean,0.02159,0.02159,0.0,0.002,reproduced
+slab: pinn_nopde hold-out r2_mean,0.94107,0.94107,0.0,0.002,reproduced
+slab: pinn_nopde hold-out rmse_mean,0.03646,0.03646,0.0,0.002,reproduced
 slab: solver check pen R2,0.9998354412585846,0.9998354412585846,0.0,0.001,reproduced
 slab: solver check pinn R2,0.8597367319999157,0.8597367319999157,0.0,0.02,reproduced
 CV lofo fdreg pooled R2,0.9912996910205564,0.9912992031610494,4.878595070145764e-07,0.0005,reproduced
@@ -41,5 +41,5 @@ CV lomo mlp pooled R2,0.9867674725136492,0.9867674725136492,0.0,0.0005,reproduce
 CV lomo mlp worst-mix R2,0.9533399544212972,0.9533399544212972,0.0,0.01,reproduced
 CV lomo pen pooled R2,0.9908968810815364,0.9908968810815364,0.0,0.0005,reproduced
 CV lomo pen worst-mix R2,0.9746008059916084,0.9746008059916084,0.0,0.01,reproduced
-numerical_verification.md identical,1.0,0.0,1.0,0.0,DIFFERENT (see file)
-geometry_check.csv identical,1.0,0.0,1.0,0.0,DIFFERENT (see file)
+numerical_verification.md: largest relative difference of all numbers,0.0,0.01562499999999987,0.01562499999999987,0.05,reproduced
+geometry_check.csv: largest relative difference of all numbers,0.0,0.0005190649541781959,0.0005190649541781959,0.01,reproduced

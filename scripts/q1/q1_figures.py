@@ -179,7 +179,8 @@ def fig06_comparison():
         ax.plot(x, y, MK[m], color=COL[m], ms=3.6, mfc="none", mew=0.8)
         nlow = int((g.r2 < 0.80).sum())
         if nlow:
-            ax.text(i, 0.795, f"{nlow} < 0.80\n(min {g.r2.min():.2f})", ha="center", va="top", fontsize=6.2, color=C["data"])
+            ax.text(i, 0.792, f"{nlow} below\nmin {g.r2.min():.2f}", ha="center", va="top", fontsize=5.6, color=C["data"],
+                    linespacing=1.1)
     ax.axhline(0.95, color=C["muted"], ls="--", lw=0.8)
     ax.set_ylim(0.74, 1.005)
     ax.set_xticks(range(len(meths)))
@@ -206,7 +207,7 @@ def fig06_comparison():
     ax.set_yticklabels(yl, fontsize=7)
     ax.invert_yaxis()
     ax.set_xlabel("Mean per-mix RMSE difference (first − second), with 95 % bootstrap interval; filled: Wilcoxon p < 0.05")
-    ax.legend(loc="lower left", fontsize=7)
+    ax.legend(loc="upper left", fontsize=7)
     ax.grid(axis="y", visible=False)
     panel(ax, "c")
     save(fig, "fig06_comparison")
@@ -274,11 +275,11 @@ def fig07_robustness():
     axes[0].set_yticklabels([o[1] for o in order], fontsize=7.2)
     axes[0].invert_yaxis()
     axes[0].set_xlabel("RMSE, withheld mixes")
-    axes[0].legend(loc="lower right", fontsize=6.6)
+    fig.legend(*axes[0].get_legend_handles_labels(), loc="lower center", ncol=4, bbox_to_anchor=(0.5, -0.14), fontsize=7)
     axes[1].set_xscale("log")
     axes[1].set_xlim(1e-4, 1)
     axes[1].set_xlabel(r"Largest shift of $\log_{10} K_\mathrm{int}$ (decades)")
-    axes[1].legend(loc="lower right", fontsize=6.6)
+    axes[1].legend(loc="upper left", fontsize=6.6)
     for ax, l in zip(axes, "ab"):
         ax.grid(axis="y", visible=False)
         panel(ax, l)
@@ -359,7 +360,7 @@ def fig10_parameters():
                 continue
             j = (list(mf.MARK).index(fam) - 3) * 0.008
             lo, hi = I.loc[g.index, f"{kk}_lo_eff"], I.loc[g.index, f"{kk}_hi_eff"]
-            ax.errorbar(g.wb + j - 0.0025, g[f"{k}_fd"], yerr=[g[f"{k}_fd"] - lo, hi - g[f"{k}_fd"]], fmt=mk, ms=4.3,
+            ax.errorbar(g.wb + j - 0.0025, g[f"{k}_fd"], yerr=[np.maximum(g[f"{k}_fd"] - lo, 0), np.maximum(hi - g[f"{k}_fd"], 0)], fmt=mk, ms=4.3,
                         mfc="none", mec=COL["ols"], mew=0.9, ecolor=COL["ols"], elinewidth=0.7, capsize=0)
             ax.plot(g.wb + j, g[f"{k}_pen"], mk, ms=4.3, color=COL["pen"], mec="white", mew=0.4)
             ax.plot(g.wb + j + 0.0025, pr.loc[g.index, (k, "mean")], mk, ms=4.3, color=COL["pen_r"], mec="white", mew=0.4)

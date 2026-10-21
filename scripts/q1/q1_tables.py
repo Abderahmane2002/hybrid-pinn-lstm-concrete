@@ -15,7 +15,7 @@ from common import ROOT, TEST_MIXES
 Q = ROOT / "results/q1"
 OUT = Q / "tables"
 OUT.mkdir(parents=True, exist_ok=True)
-NAME = {"pen": "PENN", "pen_r": "PENN, revised (no weight decay)", "pen_lin": "PENN, linear composition map",
+NAME = {"pen": "PENN", "pen_r": "PENN, revised (linear map, L-BFGS)", "pen_lin": "PENN, linear composition map",
         "pen_s": "PENN, 1 × 8 units", "ols": "Two-stage, linear (OLS)", "ridge": "Two-stage, ridge",
         "quad": "Two-stage, quadratic", "gp": "Two-stage, Gaussian process", "mlp": "Data-driven network"}
 ORDER = ["ols", "ridge", "quad", "gp", "pen", "pen_r", "pen_lin", "pen_s", "mlp"]
@@ -56,7 +56,8 @@ def holdout():
         if m == "mlp":
             t = f"{m0['mlp']['time_s']:.0f} s"
         elif m.startswith("pen"):
-            t = f"{T.loc[('holdout', m), 'time_s']:.0f} s^a^"
+            tt = T.loc[('holdout', m), 'time_s']
+            t = (f"{tt:.0f} s^a^" if tt >= 1 else "< 1 s^a^")
         else:
             t = f"{m0['fdreg']['time_s']:.0f} s^b^"
         L.append(f"| {NAME[m]} | {pm(r.r2, r.r2_sd)} | {pm(r.rmse, r.rmse_sd)} | {t} |")
@@ -124,7 +125,8 @@ def sensitivity():
     for v, l in lab.items():
         if v in S.index:
             r = S.loc[v]
-            L.append(f"| {l} | {r.dDv_mean:+.3f} | {r.dK_mean:+.3f} | {r.dK_maxabs:.3f} | {r.rmse_ratio:.2f} | {r.rank_Dv:.2f} | {r.rank_K:.2f} |")
+            L.append(f"| {l} | {r.dDv_mean:+.3f} | {r.dK_mean:+.3f} | {r.dK_maxabs:.3f} | {r.rmse_ratio:.2f} | {r.rank_Dv:.2f} | "
+                     f"{r.rank_K:.2f} |".replace("+-", "−").replace("| -", "| −"))
     L.append("| $P_{c0}$ or $\\eta_l$ × c | 0 | −log₁₀ c (exact) | – | 1.00 | 1.00 | 1.00 |")
     write("sensitivity", L)
 
@@ -155,7 +157,7 @@ def pinn_diag():
     for k, l in lab:
         r = R.loc[k]
         L.append(f"| {l} | {r.loss_total:.3f} | {r.loss_data:.3f} | {r.loss_pde:.4f} | {r.train_rmse:.4f} | {r.pde_rms:.3f} | "
-                 f"{r.fwd_vs_model_r2:.3f} | {r.bias_K_vs_classical:+.2f} |")
+                 f"{r.fwd_vs_model_r2:.3f} | {r.bias_K_vs_classical:+.2f} |".replace("-", "−"))
     write("pinn_diag", L)
 
 
