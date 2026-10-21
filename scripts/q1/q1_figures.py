@@ -12,6 +12,7 @@ import sys
 from pathlib import Path
 
 import matplotlib
+import matplotlib.ticker
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
@@ -218,7 +219,7 @@ def fig08_efficiency():
     T = pd.read_csv(Q / "data_efficiency/truncation.csv")
     meths = ["pen", "pen_r", "ols", "gp", "mlp"]
     fig, axes = plt.subplots(1, 3, figsize=(7.2, 2.7))
-    fig.subplots_adjust(wspace=0.42)
+    fig.subplots_adjust(wspace=0.5)
     for m in meths:
         g = S[S.method == m].sort_values("k")
         if not len(g):
@@ -243,11 +244,14 @@ def fig08_efficiency():
     axes[2].set_xticks([3, 4, 7, 14, 100])
     axes[2].set_xticklabels(["3", "4", "7", "14", "all"])
     axes[2].set_yscale("log")
+    axes[2].set_yticks([0.015, 0.02, 0.03, 0.05, 0.08])
+    axes[2].yaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter("%.3g"))
+    axes[2].yaxis.set_minor_formatter(matplotlib.ticker.NullFormatter())
     axes[2].set_xlabel("Training curves cut at (d)")
     axes[2].set_ylabel("RMSE, withheld mixes")
     for ax, l in zip(axes, "abc"):
         panel(ax, l)
-    fig.legend(*axes[0].get_legend_handles_labels(), loc="lower center", ncol=5, bbox_to_anchor=(0.5, -0.08), fontsize=7)
+    fig.legend(*axes[0].get_legend_handles_labels(), loc="lower center", ncol=3, bbox_to_anchor=(0.5, -0.2), fontsize=7)
     save(fig, "fig08_efficiency")
 
 

@@ -32,7 +32,7 @@ All values were recomputed in this revision. The original values were reproduced
 The PENN does **not** outperform classical inversion followed by linear regression. Paired per-mix differences are not significant (LOMO p = «pair_lomo_pen_ols_p», LOFO p = «pair_lofo_pen_ols_p»). Classical inversion remains the reference for per-mix parameter estimation. The PENN's demonstrated advantages are:
 
 - robustness with short curves («tr7_pen» vs «tr7_ols» RMSE with 7-day curves);
-- stability with very few training mixes («de5_pen» vs «de5_ols» with 5 mixes);
+- stability with very few training mixes for the regularised original PENN («de5_pen» vs «de5_ols» with 5 mixes);
 - composition-level parameters that are much less sensitive to digitisation errors than per-mix fits;
 - convenience: one training run, no per-mix inversion.
 
