@@ -128,7 +128,7 @@ def fig04_identifiability():
     ax.set_yticks(y)
     ax.set_yticklabels(I.Mix, fontsize=6.3)
     ax.set_xlabel(r"$\log_{10} K_\mathrm{int}$ (m$^2$)")
-    ax.legend(loc="lower right", fontsize=6.5)
+    ax.legend(loc="upper left", fontsize=6.5)
     ax.grid(axis="y", visible=False)
     panel(ax, "c")
     ax = axes[1, 1]
