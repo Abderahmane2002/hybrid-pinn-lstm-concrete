@@ -1,0 +1,3 @@
+kind,sel_hidden,sel_layers,sel_weight_decay,sel_inner_rmse,paper_inner_rmse,inner_rank_of_paper,n_configs,test_rmse_selected,test_rmse_selected_sd,sel_iters
+mlp,48,4,0.001,0.03461412878162698,0.08258751237759714,4,4,0.030860961733717752,0.0005243080221976574,
+pen,32,2,,0.017345851349958554,0.017840920079754734,5,9,0.013779315489112261,4.264625236014789e-05,200.0
