@@ -121,11 +121,12 @@ def main():
             scores.append({"variant": name, "rep": r, "seed": 0, "method": "ols", **metrics(test.S_frac, predict_from_theta(test, th))})
             seeds = [r] if kind == "noise" else range(5)
             for s in seeds:
-                thp, _ = run_pen("pen", train, mt.reset_index(), seed=s)
-                scores.append({"variant": name, "rep": r, "seed": s, "method": "pen",
-                               **metrics(test.S_frac, predict_from_theta(test, thp))})
-                thetas += [{"variant": name, "rep": r, "seed": s, "method": "pen", "Mix": m, "log10_Dv": v[0], "log10_K": v[1]}
-                           for m, v in thp.items()]
+                for pk in ("pen", "pen_r"):
+                    thp, _ = run_pen(pk, train, mt.reset_index(), seed=s)
+                    scores.append({"variant": name, "rep": r, "seed": s, "method": pk,
+                                   **metrics(test.S_frac, predict_from_theta(test, thp))})
+                    thetas += [{"variant": name, "rep": r, "seed": s, "method": pk, "Mix": m, "log10_Dv": v[0],
+                                "log10_K": v[1]} for m, v in thp.items()]
                 p = DataDrivenMLP(seed=s).fit(train).predict(test)
                 scores.append({"variant": name, "rep": r, "seed": s, "method": "mlp", **metrics(test.S_frac, p)})
             print(f"{name} rep {r} ({time.time() - t0:.0f} s)", flush=True)

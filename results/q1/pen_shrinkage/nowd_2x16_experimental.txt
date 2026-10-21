@@ -1,0 +1,58 @@
+# Exploratory run (superseded): 'pen_r' = PENN 2x16, no weight decay, 2000 Adam iterations, evaluated once on the experimental data
+# source: scripts/q1/exp_baselines.py run of 2026-10-21 (log copy)
+holdout holdout done (60 s)
+lomo C-0.3 done (74 s)
+lomo C-0.4 done (88 s)
+lomo C-0.5 done (101 s)
+lomo F10S10-0.3 done (115 s)
+lomo F10S10-0.4 done (129 s)
+lomo F10S10-0.5 done (142 s)
+lomo F20-0.3 done (157 s)
+lomo F20-0.4 done (171 s)
+lomo F20-0.5 done (185 s)
+lomo F20S20-0.3 done (204 s)
+lomo F20S20-0.4 done (222 s)
+lomo F20S20-0.5 done (239 s)
+lomo F40-0.3 done (252 s)
+lomo F40-0.4 done (264 s)
+lomo F40-0.5 done (278 s)
+lomo S20-0.3 done (291 s)
+lomo S20-0.4 done (304 s)
+lomo S40-0.3 done (317 s)
+lomo S40-0.4 done (329 s)
+lomo S40-0.5 done (342 s)
+lofo C done (354 s)
+lofo F20 done (367 s)
+lofo F40 done (379 s)
+lofo S20 done (392 s)
+lofo S40 done (404 s)
+lofo F10S10 done (416 s)
+lofo F20S20 done (429 s)
+ scheme  method     r2  r2_sd   rmse  rmse_sd  rmse_mix_mean  r2_mix_min  n_below
+holdout      gp 0.9849    NaN 0.0204      NaN         0.0195      0.9701      0.0
+holdout     mlp 0.9852 0.0012 0.0202   0.0008         0.0180      0.8966      1.0
+holdout     ols 0.9934    NaN 0.0135      NaN         0.0129      0.9811      0.0
+holdout     pen 0.9931 0.0002 0.0137   0.0002         0.0124      0.9774      0.0
+holdout pen_lin 0.9928 0.0001 0.0141   0.0001         0.0131      0.9790      0.0
+holdout   pen_r 0.9871 0.0032 0.0187   0.0024         0.0184      0.9589      0.4
+holdout   pen_s 0.9932 0.0000 0.0137   0.0000         0.0125      0.9784      0.0
+holdout    quad 0.9939    NaN 0.0130      NaN         0.0127      0.9872      0.0
+holdout   ridge 0.9933    NaN 0.0136      NaN         0.0130      0.9812      0.0
+   lofo      gp 0.9484    NaN 0.0371      NaN         0.0296      0.3813      5.0
+   lofo     mlp 0.9355    NaN 0.0415      NaN         0.0320      0.2177      7.0
+   lofo     ols 0.9913    NaN 0.0152      NaN         0.0143      0.9646      0.0
+   lofo     pen 0.9903    NaN 0.0160      NaN         0.0148      0.9677      0.0
+   lofo pen_lin 0.9899    NaN 0.0164      NaN         0.0151      0.9687      0.0
+   lofo   pen_r 0.9807    NaN 0.0227      NaN         0.0190      0.7839      3.0
+   lofo   pen_s 0.9905    NaN 0.0159      NaN         0.0147      0.9665      0.0
+   lofo    quad 0.9012    NaN 0.0513      NaN         0.0386      0.1981      6.0
+   lofo   ridge 0.9916    NaN 0.0150      NaN         0.0141      0.9658      0.0
+   lomo      gp 0.9814    NaN 0.0223      NaN         0.0202      0.9183      2.0
+   lomo     mlp 0.9868    NaN 0.0188      NaN         0.0171      0.9533      0.0
+   lomo     ols 0.9919    NaN 0.0147      NaN         0.0141      0.9736      0.0
+   lomo     pen 0.9909    NaN 0.0156      NaN         0.0147      0.9746      0.0
+   lomo pen_lin 0.9912    NaN 0.0153      NaN         0.0144      0.9701      0.0
+   lomo   pen_r 0.9864    NaN 0.0190      NaN         0.0169      0.9180      1.0
+   lomo   pen_s 0.9911    NaN 0.0154      NaN         0.0145      0.9738      0.0
+   lomo    quad 0.9870    NaN 0.0186      NaN         0.0178      0.9653      0.0
+   lomo   ridge 0.9918    NaN 0.0148      NaN         0.0141      0.9716      0.0

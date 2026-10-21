@@ -41,8 +41,9 @@ def main():
     res = []
     for scheme in ("lomo", "lofo"):
         w = pm[pm.scheme == scheme].pivot(index="Mix", columns="method", values="rmse")
-        for a, b in (("pen", "ols"), ("pen", "ridge"), ("pen", "pen_lin"), ("pen", "mlp"), ("pen", "gp"),
-                     ("pen", "quad"), ("ols", "mlp")):
+        for a, b in (("pen", "ols"), ("pen_r", "ols"), ("pen", "ridge"), ("pen", "pen_lin"), ("pen", "pen_r"),
+                     ("pen", "mlp"), ("pen_r", "mlp"), ("pen", "gp"), ("pen", "quad"), ("ols", "mlp"), ("ols", "gp"),
+                     ("ols", "quad")):
             diff = (w[a] - w[b]).to_numpy()
             boots = np.array([diff[rng.integers(0, len(diff), len(diff))].mean() for _ in range(10000)])
             res.append({"scheme": scheme, "a": a, "b": b, "mean_rmse_a": w[a].mean(), "mean_rmse_b": w[b].mean(),

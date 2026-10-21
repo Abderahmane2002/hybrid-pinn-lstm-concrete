@@ -40,7 +40,7 @@ def main(sizes=(5, 8, 11, 14), n_rep=10):
             for kind in ("ols", "ridge", "gp"):
                 Y, _ = two_stage(kind, Xtr, cls.loc[tr_m, NAMES].to_numpy(), Xte)
                 preds[kind] = predict_from_theta(test, {m: Y[i] for i, m in enumerate(te_m)})
-            for kind in ("pen", "pen_lin"):
+            for kind in ("pen", "pen_lin", "pen_r"):
                 th, _ = run_pen(kind, train, mt.loc[te_m].reset_index(), seed=rep)
                 preds[kind] = predict_from_theta(test, th)
             preds["mlp"] = DataDrivenMLP(seed=rep).fit(train).predict(test)
@@ -82,7 +82,7 @@ def truncation(cutoffs=(3.0, 4.0, 7.0, 14.0, None)):
         Y, _ = two_stage("ols", comp(mt.loc[ok].reset_index()), cls.loc[ok, NAMES].to_numpy(), Xte)
         res = {"ols": [predict_from_theta(test, {m: Y[i] for i, m in enumerate(TEST_MIXES)})]}
         dth = {"ols": [(cls.loc[ok, NAMES] - cl_full.loc[ok, NAMES]).abs().mean()]}
-        for kind in ("pen", "pen_lin"):
+        for kind in ("pen", "pen_lin", "pen_r"):
             res[kind], dth[kind] = [], []
             for s in range(5):
                 th, _ = run_pen(kind, train, mt.reset_index(), seed=s)

@@ -77,11 +77,16 @@ def two_stage(kind, Xtr, Ytr, Xte):
     raise ValueError(kind)
 
 
-PEN_ARCH = {"pen": dict(hidden=16, layers=2), "pen_s": dict(hidden=8, layers=1), "pen_lin": dict(hidden=1, layers=0)}
+PEN_ARCH = {"pen": dict(hidden=16, layers=2), "pen_s": dict(hidden=8, layers=1), "pen_lin": dict(hidden=1, layers=0),
+            # revised PENN: linear composition map, no weight decay, trained to convergence with L-BFGS
+            # (chosen on synthetic data only, scripts/q1/exp_pen_shrinkage.py)
+            "pen_r": dict(hidden=1, layers=0, iters=500, weight_decay=0.0, optimizer="lbfgs")}
 
 
 def run_pen(kind, train, test_mixes_df, seed):
-    tr = PENTrainer(train, disc_cfg(), lr=0.02, iters=400, seed=seed, **PEN_ARCH[kind]).fit(verbose=False)
+    kw = {"lr": 0.02, "iters": 400, **PEN_ARCH[kind]}
+    opt = kw.pop("optimizer", "adam")
+    tr = PENTrainer(train, disc_cfg(), seed=seed, **kw).fit(verbose=False, optimizer=opt)
     th = tr.predict_theta(test_mixes_df)
     return {r.Mix: (r.log10_Dv, r.log10_K) for r in th.itertuples()}, tr.train_time
 

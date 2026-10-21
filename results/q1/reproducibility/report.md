@@ -1,0 +1,50 @@
+# Reproducibility check
+
+Independent re-run from a clean clone (`/home/claude/work/repro`), all results regenerated from the raw data.
+
+| Item | Manuscript | Re-run | |diff| | Status |
+|---|---|---|---|---|
+| cleaned data: number of points | 1001 | 1001 | 0 | reproduced |
+| cleaned data: max |S difference| | 0 | 0 | 0 | reproduced |
+| cleaned data: max |t difference| [d] | 0 | 0 | 0 | reproduced |
+| disc: classical log10 D_v, max |diff| | 0 | 0.000156831 | 0.00016 | reproduced |
+| disc: classical log10 K_int, max |diff| | 0 | 0.00100189 | 0.001 | reproduced |
+| disc: classical median R2 | 0.998562 | 0.998562 | 1.2e-08 | reproduced |
+| slab: classical log10 D_v, max |diff| | 0 | 0 | 0 | reproduced |
+| slab: classical log10 K_int, max |diff| | 0 | 0 | 0 | reproduced |
+| slab: classical median R2 | 0.998763 | 0.998763 | 0 | reproduced |
+| disc: pen hold-out r2_mean | 0.99314 | 0.99314 | 0 | reproduced |
+| disc: pen hold-out rmse_mean | 0.01374 | 0.01374 | 0 | reproduced |
+| disc: mlp hold-out r2_mean | 0.98519 | 0.98519 | 0 | reproduced |
+| disc: mlp hold-out rmse_mean | 0.02018 | 0.02018 | 0 | reproduced |
+| disc: fdreg hold-out r2_mean | 0.99341 | 0.99341 | 0 | reproduced |
+| disc: fdreg hold-out rmse_mean | 0.01347 | 0.01347 | 0 | reproduced |
+| disc: fdfit hold-out r2_mean | 0.99856 | 0.99856 | 0 | reproduced |
+| disc: fdfit hold-out rmse_mean | 0.0063 | 0.0063 | 0 | reproduced |
+| disc: solver check pen R2 | 1 | 1 | 0 | reproduced |
+| slab: pen hold-out r2_mean | 0.99354 | 0.99354 | 0 | reproduced |
+| slab: pen hold-out rmse_mean | 0.01333 | 0.01333 | 0 | reproduced |
+| slab: mlp hold-out r2_mean | 0.98519 | 0.98519 | 0 | reproduced |
+| slab: mlp hold-out rmse_mean | 0.02018 | 0.02018 | 0 | reproduced |
+| slab: fdreg hold-out r2_mean | 0.99375 | 0.99375 | 0 | reproduced |
+| slab: fdreg hold-out rmse_mean | 0.01311 | 0.01311 | 0 | reproduced |
+| slab: pinn hold-out r2_mean | 0.98262 | 0.9801 | 0.0025 | DIFFERENT |
+| slab: pinn hold-out rmse_mean | 0.02159 | 0.02317 | 0.0016 | reproduced |
+| slab: pinn_nopde hold-out r2_mean | 0.94107 | 0.97792 | 0.037 | DIFFERENT |
+| slab: pinn_nopde hold-out rmse_mean | 0.03646 | 0.02447 | 0.012 | DIFFERENT |
+| slab: solver check pen R2 | 0.999835 | 0.999835 | 0 | reproduced |
+| slab: solver check pinn R2 | 0.859737 | 0.859737 | 0 | reproduced |
+| CV lofo fdreg pooled R2 | 0.9913 | 0.991299 | 4.9e-07 | reproduced |
+| CV lofo fdreg worst-mix R2 | 0.964661 | 0.964661 | 7e-07 | reproduced |
+| CV lofo mlp pooled R2 | 0.935476 | 0.935476 | 0 | reproduced |
+| CV lofo mlp worst-mix R2 | 0.217697 | 0.217697 | 0 | reproduced |
+| CV lofo pen pooled R2 | 0.990337 | 0.990337 | 0 | reproduced |
+| CV lofo pen worst-mix R2 | 0.967749 | 0.967749 | 0 | reproduced |
+| CV lomo fdreg pooled R2 | 0.991877 | 0.991877 | 8.2e-08 | reproduced |
+| CV lomo fdreg worst-mix R2 | 0.973636 | 0.973644 | 8e-06 | reproduced |
+| CV lomo mlp pooled R2 | 0.986767 | 0.986767 | 0 | reproduced |
+| CV lomo mlp worst-mix R2 | 0.95334 | 0.95334 | 0 | reproduced |
+| CV lomo pen pooled R2 | 0.990897 | 0.990897 | 0 | reproduced |
+| CV lomo pen worst-mix R2 | 0.974601 | 0.974601 | 0 | reproduced |
+| numerical_verification.md identical | 1 | 0 | 1 | DIFFERENT (see file) |
+| geometry_check.csv identical | 1 | 0 | 1 | DIFFERENT (see file) |

@@ -1,0 +1,45 @@
+item,manuscript,reproduced,abs_diff,tolerance,status
+cleaned data: number of points,1001.0,1001.0,0.0,0.0,reproduced
+cleaned data: max |S difference|,0.0,0.0,0.0,1e-12,reproduced
+cleaned data: max |t difference| [d],0.0,0.0,0.0,1e-12,reproduced
+"disc: classical log10 D_v, max |diff|",0.0,0.0001568314550350891,0.0001568314550350891,0.005,reproduced
+"disc: classical log10 K_int, max |diff|",0.0,0.0010018863308616233,0.0010018863308616233,0.02,reproduced
+disc: classical median R2,0.9985623595120319,0.9985623713619246,1.1849892733728495e-08,0.0001,reproduced
+"slab: classical log10 D_v, max |diff|",0.0,0.0,0.0,0.005,reproduced
+"slab: classical log10 K_int, max |diff|",0.0,0.0,0.0,0.02,reproduced
+slab: classical median R2,0.9987630195211938,0.9987630195211938,0.0,0.0001,reproduced
+disc: pen hold-out r2_mean,0.99314,0.99314,0.0,0.0002,reproduced
+disc: pen hold-out rmse_mean,0.01374,0.01374,0.0,0.0002,reproduced
+disc: mlp hold-out r2_mean,0.98519,0.98519,0.0,0.0002,reproduced
+disc: mlp hold-out rmse_mean,0.02018,0.02018,0.0,0.0002,reproduced
+disc: fdreg hold-out r2_mean,0.99341,0.99341,0.0,0.0002,reproduced
+disc: fdreg hold-out rmse_mean,0.01347,0.01347,0.0,0.0002,reproduced
+disc: fdfit hold-out r2_mean,0.99856,0.99856,0.0,0.0002,reproduced
+disc: fdfit hold-out rmse_mean,0.0063,0.0063,0.0,0.0002,reproduced
+disc: solver check pen R2,0.9999999615937557,0.9999999615937557,0.0,0.001,reproduced
+slab: pen hold-out r2_mean,0.99354,0.99354,0.0,0.0002,reproduced
+slab: pen hold-out rmse_mean,0.01333,0.01333,0.0,0.0002,reproduced
+slab: mlp hold-out r2_mean,0.98519,0.98519,0.0,0.0002,reproduced
+slab: mlp hold-out rmse_mean,0.02018,0.02018,0.0,0.0002,reproduced
+slab: fdreg hold-out r2_mean,0.99375,0.99375,0.0,0.0002,reproduced
+slab: fdreg hold-out rmse_mean,0.01311,0.01311,0.0,0.0002,reproduced
+slab: pinn hold-out r2_mean,0.98262,0.9801,0.0025200000000000777,0.002,DIFFERENT
+slab: pinn hold-out rmse_mean,0.02159,0.02317,0.001579999999999998,0.002,reproduced
+slab: pinn_nopde hold-out r2_mean,0.94107,0.97792,0.03685000000000005,0.002,DIFFERENT
+slab: pinn_nopde hold-out rmse_mean,0.03646,0.02447,0.01199,0.002,DIFFERENT
+slab: solver check pen R2,0.9998354412585846,0.9998354412585846,0.0,0.001,reproduced
+slab: solver check pinn R2,0.8597367319999157,0.8597367319999157,0.0,0.02,reproduced
+CV lofo fdreg pooled R2,0.9912996910205564,0.9912992031610494,4.878595070145764e-07,0.0005,reproduced
+CV lofo fdreg worst-mix R2,0.9646606376025342,0.9646613382230396,7.006205053894377e-07,0.01,reproduced
+CV lofo mlp pooled R2,0.9354764666308922,0.9354764666308922,0.0,0.0005,reproduced
+CV lofo mlp worst-mix R2,0.217696719198695,0.217696719198695,0.0,0.01,reproduced
+CV lofo pen pooled R2,0.9903365148528948,0.9903365148528948,0.0,0.0005,reproduced
+CV lofo pen worst-mix R2,0.9677491713640062,0.9677491713640062,0.0,0.01,reproduced
+CV lomo fdreg pooled R2,0.9918765929553282,0.991876675100739,8.214541080686644e-08,0.0005,reproduced
+CV lomo fdreg worst-mix R2,0.9736358029451198,0.9736438111527748,8.008207655008093e-06,0.01,reproduced
+CV lomo mlp pooled R2,0.9867674725136492,0.9867674725136492,0.0,0.0005,reproduced
+CV lomo mlp worst-mix R2,0.9533399544212972,0.9533399544212972,0.0,0.01,reproduced
+CV lomo pen pooled R2,0.9908968810815364,0.9908968810815364,0.0,0.0005,reproduced
+CV lomo pen worst-mix R2,0.9746008059916084,0.9746008059916084,0.0,0.01,reproduced
+numerical_verification.md identical,1.0,0.0,1.0,0.0,DIFFERENT (see file)
+geometry_check.csv identical,1.0,0.0,1.0,0.0,DIFFERENT (see file)

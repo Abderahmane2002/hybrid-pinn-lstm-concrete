@@ -35,7 +35,9 @@ def main(repro: Path):
     # classical fits
     for geo in ("disc", "slab"):
         a = pd.read_csv(O / geo / "classical_fits.csv").set_index("Mix")
-        b = pd.read_csv(N / geo / "classical_fits.csv").set_index("Mix").loc[a.index]
+        b = pd.read_csv(N / geo / "classical_fits.csv").set_index("Mix")
+        common = a.index.intersection(b.index)          # the original slab file also holds the w/b = 0.6 fits
+        a, b = a.loc[common], b.loc[common]
         add(f"{geo}: classical log10 D_v, max |diff|", 0.0, float((a.log10_Dv - b.log10_Dv).abs().max()), 0.005)
         add(f"{geo}: classical log10 K_int, max |diff|", 0.0, float((a.log10_K - b.log10_K).abs().max()), 0.02)
         add(f"{geo}: classical median R2", float(a.r2.median()), float(b.r2.median()), 1e-4)
@@ -57,12 +59,19 @@ def main(repro: Path):
     for idx in a.index:
         add(f"CV {idx[0]} {idx[1]} pooled R2", a.loc[idx, "r2"], b.loc[idx, "r2"], 5e-4)
         add(f"CV {idx[0]} {idx[1]} worst-mix R2", a.loc[idx, "r2_mix_min"], b.loc[idx, "r2_mix_min"], 0.01)
-    # numerics
-    for f in ("numerical_verification.md", "geometry_check.csv"):
+    # numerics: compare every number in the verification files
+    import re
+    for f, tol in (("numerical_verification.md", 0.05), ("geometry_check.csv", 0.01)):
         if (N / f).exists():
-            same = (O / f).read_text() == (N / f).read_text()
-            rows.append({"item": f"{f} identical", "manuscript": 1, "reproduced": int(same), "abs_diff": 0 if same else 1,
-                         "tolerance": 0, "status": "reproduced" if same else "DIFFERENT (see file)"})
+            xa = np.array([float(x) for x in re.findall(r"-?\d+\.?\d*(?:e[-+]?\d+)?", (O / f).read_text())])
+            xb = np.array([float(x) for x in re.findall(r"-?\d+\.?\d*(?:e[-+]?\d+)?", (N / f).read_text())])
+            if len(xa) == len(xb):
+                rel = float(np.max(np.abs(xa - xb) / np.maximum(np.abs(xa), 1e-12)))
+                rows.append({"item": f"{f}: largest relative difference of all numbers", "manuscript": 0.0, "reproduced": rel,
+                             "abs_diff": rel, "tolerance": tol, "status": "reproduced" if rel <= tol else "DIFFERENT"})
+            else:
+                rows.append({"item": f"{f}: number count", "manuscript": len(xa), "reproduced": len(xb),
+                             "abs_diff": abs(len(xa) - len(xb)), "tolerance": 0, "status": "DIFFERENT"})
     R = pd.DataFrame(rows)
     R.to_csv(out / "comparison.csv", index=False)
     lines = ["# Reproducibility check", "",

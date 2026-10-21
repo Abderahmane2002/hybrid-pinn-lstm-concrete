@@ -149,7 +149,13 @@ class PENTrainer:
         avg = self.solver.run({k: th[:, i] for i, k in enumerate(self.model.names)})
         return self.solver.interp(avg, self.tq)
 
-    def fit(self, verbose=True, log_every=50):
+    def fit(self, verbose=True, log_every=50, optimizer="adam"):
+        """optimizer="adam": Adam with exponential decay (original setting).
+        optimizer="lbfgs": full-batch L-BFGS for `iters` iterations, no weight decay (used for the
+        linear composition map, which Adam with a decaying step leaves under-converged in the
+        weakly sensitive log10 K_int direction; see scripts/q1/exp_pen_shrinkage.py)."""
+        if optimizer == "lbfgs":
+            return self._fit_lbfgs(verbose)
         opt = torch.optim.Adam(self.model.parameters(), lr=self.lr, weight_decay=self.wd)
         sched = torch.optim.lr_scheduler.ExponentialLR(opt, gamma=0.995)
         t0 = time.time()
@@ -164,6 +170,25 @@ class PENTrainer:
                 self.history.append({"it": it, "mse": loss.item(), "time_s": time.time() - t0})
                 if verbose:
                     print(f"[PEN {it:4d}] rmse={loss.item() ** 0.5:.4f} ({time.time() - t0:.0f}s)", flush=True)
+        self.train_time = time.time() - t0
+        return self
+
+    def _fit_lbfgs(self, verbose):
+        opt = torch.optim.LBFGS(self.model.parameters(), lr=1.0, max_iter=self.iters, history_size=50,
+                                line_search_fn="strong_wolfe", tolerance_grad=1e-12, tolerance_change=1e-15)
+        t0 = time.time()
+
+        def closure():
+            opt.zero_grad()
+            loss = ((self.predict_train() - self.sq) ** 2 * self.mask).sum() / self.mask.sum()
+            loss.backward()
+            return loss
+        opt.step(closure)
+        with torch.no_grad():
+            mse = float(((self.predict_train() - self.sq) ** 2 * self.mask).sum() / self.mask.sum())
+        self.history.append({"it": self.iters, "mse": mse, "time_s": time.time() - t0})
+        if verbose:
+            print(f"[PEN lbfgs] rmse={mse ** 0.5:.4f} ({time.time() - t0:.1f}s)", flush=True)
         self.train_time = time.time() - t0
         return self
 
