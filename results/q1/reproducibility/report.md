@@ -4,15 +4,15 @@ Independent re-run from a clean clone (`/home/claude/work/repro`), all results r
 
 | Item | Manuscript | Re-run | |diff| | Status |
 |---|---|---|---|---|
-| cleaned data: number of points | 1001 | 1001 | 0 | reproduced |
-| cleaned data: max |S difference| | 0 | 0 | 0 | reproduced |
-| cleaned data: max |t difference| [d] | 0 | 0 | 0 | reproduced |
-| disc: classical log10 D_v, max |diff| | 0 | 0.000156831 | 0.00016 | reproduced |
-| disc: classical log10 K_int, max |diff| | 0 | 0.00100189 | 0.001 | reproduced |
-| disc: classical median R2 | 0.998562 | 0.998562 | 1.2e-08 | reproduced |
-| slab: classical log10 D_v, max |diff| | 0 | 0 | 0 | reproduced |
-| slab: classical log10 K_int, max |diff| | 0 | 0 | 0 | reproduced |
-| slab: classical median R2 | 0.998763 | 0.998763 | 0 | reproduced |
+| Cleaned data: number of points | 1001 | 1001 | 0 | reproduced |
+| Cleaned data: largest difference in S | 0 | 0 | 0 | reproduced |
+| Cleaned data: largest difference in t (d) | 0 | 0 | 0 | reproduced |
+| Disc: classical log10 Dv, largest difference | 0 | 0.000156831 | 0.00016 | reproduced |
+| Disc: classical log10 Kint, largest difference | 0 | 0.00100189 | 0.001 | reproduced |
+| Disc: classical fits, median R2 | 0.998562 | 0.998562 | 1.2e-08 | reproduced |
+| Slab: classical log10 Dv, largest difference | 0 | 0 | 0 | reproduced |
+| Slab: classical log10 Kint, largest difference | 0 | 0 | 0 | reproduced |
+| Slab: classical fits, median R2 | 0.998763 | 0.998763 | 0 | reproduced |
 | disc: pen hold-out r2_mean | 0.99314 | 0.99314 | 0 | reproduced |
 | disc: pen hold-out rmse_mean | 0.01374 | 0.01374 | 0 | reproduced |
 | disc: mlp hold-out r2_mean | 0.98519 | 0.98519 | 0 | reproduced |
@@ -46,5 +46,5 @@ Independent re-run from a clean clone (`/home/claude/work/repro`), all results r
 | CV lomo mlp worst-mix R2 | 0.95334 | 0.95334 | 0 | reproduced |
 | CV lomo pen pooled R2 | 0.990897 | 0.990897 | 0 | reproduced |
 | CV lomo pen worst-mix R2 | 0.974601 | 0.974601 | 0 | reproduced |
-| numerical_verification.md: largest relative difference of all numbers | 0 | 0.015625 | 0.016 | reproduced |
-| geometry_check.csv: largest relative difference of all numbers | 0 | 0.000519065 | 0.00052 | reproduced |
+| Numerical verification (Table A.1): largest relative difference | 0 | 0.015625 | 0.016 | reproduced |
+| Slab-disc geometry check: largest relative difference | 0 | 0.000519065 | 0.00052 | reproduced |

@@ -9,7 +9,7 @@
 | PENN | 2 × 32 tanh, 200 iterations | 0.0173 |
 | PENN | 2 × 32 tanh, 400 iterations | 0.0174 |
 | PENN | 2 × 32 tanh, 800 iterations | 0.0174 |
-| Data-driven network | 2 × 16 tanh, weight decay 1e-05 | 0.0623 |
-| Data-driven network | 2 × 16 tanh, weight decay 0.001 | 0.0351 |
-| Data-driven network | 4 × 48 tanh, weight decay 1e-05 (original setting) | 0.0826 |
-| Data-driven network | 4 × 48 tanh, weight decay 0.001 | 0.0346 |
+| Data-driven network | 2 × 16 tanh, weight decay 10⁻⁵ | 0.0623 |
+| Data-driven network | 2 × 16 tanh, weight decay 10⁻³ | 0.0351 |
+| Data-driven network | 4 × 48 tanh, weight decay 10⁻⁵ (original setting) | 0.0826 |
+| Data-driven network | 4 × 48 tanh, weight decay 10⁻³ | 0.0346 |

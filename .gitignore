@@ -210,3 +210,4 @@ __marimo__/
 results/runs/*/model.pt
 results/*/runs/*/model.pt
 paper/build/out/
+paper/q1/build/out/

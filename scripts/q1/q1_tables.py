@@ -140,7 +140,8 @@ def inner_cv():
             paper = int(r.hidden) == 16 and int(r.iters) == 400
             name = "PENN"
         else:
-            c = f"{int(r.layers)} × {int(r.hidden)} tanh, weight decay {r.weight_decay:g}"
+            wd = {1e-5: "10⁻⁵", 1e-3: "10⁻³"}.get(r.weight_decay, f"{r.weight_decay:g}")
+            c = f"{int(r.layers)} × {int(r.hidden)} tanh, weight decay {wd}"
             paper = int(r.hidden) == 48 and r.weight_decay == 1e-5
             name = "Data-driven network"
         L.append(f"| {name} | {c}{' (original setting)' if paper else ''} | {r.inner_rmse:.4f} |")
@@ -169,7 +170,11 @@ def repro():
     L = ["| Quantity | Original | Re-run | Status |", "|:----------------------------------------|:----:|:----:|:----:|"]
     for r in R.itertuples():
         f = (lambda x: f"{x:.4g}")
-        L.append(f"| {r.item} | {f(r.manuscript)} | {f(r.reproduced)} | {r.status} |")
+        item = (r.item.replace("disc:", "Disc:").replace("slab:", "Slab:").replace(" R2", " R²").replace("r2_mean", "R²")
+                .replace("rmse_mean", "RMSE").replace("fdreg", "two-stage").replace("fdfit", "direct fit").replace("pen ", "PENN ")
+                .replace("mlp", "data-driven").replace("pinn_nopde", "PINN without PDE").replace("pinn", "PINN")
+                .replace("lomo", "LOMO").replace("lofo", "LOFO").replace("log10 Dv", "$\\log_{10} D_v$").replace("log10 Kint", "$\\log_{10} K_{\\text{int}}$"))
+        L.append(f"| {item} | {f(r.manuscript)} | {f(r.reproduced)} | {r.status} |")
     write("repro", L)
 
 

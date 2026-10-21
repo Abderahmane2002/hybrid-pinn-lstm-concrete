@@ -29,18 +29,18 @@ def main(repro: Path):
     # data
     for f, key in (("data/processed/drying_clean.csv", None),):
         a, b = pd.read_csv(ROOT / f), pd.read_csv(repro / f)
-        add("cleaned data: number of points", len(a), len(b), 0)
-        add("cleaned data: max |S difference|", 0.0, float((a.S_frac - b.S_frac).abs().max()), 1e-12)
-        add("cleaned data: max |t difference| [d]", 0.0, float((a.Time_d - b.Time_d).abs().max()), 1e-12)
+        add("Cleaned data: number of points", len(a), len(b), 0)
+        add("Cleaned data: largest difference in S", 0.0, float((a.S_frac - b.S_frac).abs().max()), 1e-12)
+        add("Cleaned data: largest difference in t (d)", 0.0, float((a.Time_d - b.Time_d).abs().max()), 1e-12)
     # classical fits
     for geo in ("disc", "slab"):
         a = pd.read_csv(O / geo / "classical_fits.csv").set_index("Mix")
         b = pd.read_csv(N / geo / "classical_fits.csv").set_index("Mix")
         common = a.index.intersection(b.index)          # the original slab file also holds the w/b = 0.6 fits
         a, b = a.loc[common], b.loc[common]
-        add(f"{geo}: classical log10 D_v, max |diff|", 0.0, float((a.log10_Dv - b.log10_Dv).abs().max()), 0.005)
-        add(f"{geo}: classical log10 K_int, max |diff|", 0.0, float((a.log10_K - b.log10_K).abs().max()), 0.02)
-        add(f"{geo}: classical median R2", float(a.r2.median()), float(b.r2.median()), 1e-4)
+        add(f"{geo.capitalize()}: classical log10 Dv, largest difference", 0.0, float((a.log10_Dv - b.log10_Dv).abs().max()), 0.005)
+        add(f"{geo.capitalize()}: classical log10 Kint, largest difference", 0.0, float((a.log10_K - b.log10_K).abs().max()), 0.02)
+        add(f"{geo.capitalize()}: classical fits, median R2", float(a.r2.median()), float(b.r2.median()), 1e-4)
     # hold-out metrics
     for geo, meths in (("disc", ("pen", "mlp", "fdreg", "fdfit")), ("slab", ("pen", "mlp", "fdreg", "pinn", "pinn_nopde"))):
         ma = json.loads((O / geo / "metrics.json").read_text())
@@ -68,7 +68,7 @@ def main(repro: Path):
             xb = np.array([float(x) for x in re.findall(r"-?\d+\.?\d*(?:e[-+]?\d+)?", strip((N / f).read_text()))])
             if len(xa) == len(xb):
                 rel = float(np.max(np.abs(xa - xb) / np.maximum(np.abs(xa), 1e-12)))
-                rows.append({"item": f"{f}: largest relative difference of all numbers", "manuscript": 0.0, "reproduced": rel,
+                rows.append({"item": {"numerical_verification.md": "Numerical verification (Table A.1)", "geometry_check.csv": "Slab-disc geometry check"}[f] + ": largest relative difference", "manuscript": 0.0, "reproduced": rel,
                              "abs_diff": rel, "tolerance": tol, "status": "reproduced" if rel <= tol else "DIFFERENT"})
             else:
                 rows.append({"item": f"{f}: number count", "manuscript": len(xa), "reproduced": len(xb),

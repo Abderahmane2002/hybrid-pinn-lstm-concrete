@@ -406,8 +406,9 @@ def fig12_sensitivity():
         r = S[S.variant == v].iloc[0]
         axes[2].plot(r.rmse_ratio, j, "s", color=COL["mlp"], ms=4)
     axes[2].axvline(1, color=C["data"], lw=0.8)
-    axes[2].set_xscale("log")
-    axes[2].set_xlabel("RMSE ratio to base")
+    axes[2].set_xlim(0.9, 2.4)
+    axes[2].set_xticks([1.0, 1.5, 2.0])
+    axes[2].set_xlabel("RMSE ratio to reference")
     axes[2].grid(axis="y", visible=False)
     axes[0].set_yticks(y)
     axes[0].set_yticklabels([o[1] for o in order], fontsize=7)

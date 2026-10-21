@@ -1,4 +1,4 @@
-| Mix | Two-stage, linear | PENN | PENN, revised | Two-stage, Gaussian process | Data-driven network |
+| Mix | Two-stage, linear | PENN | PENN, revised (linear map, L-BFGS) | Two-stage, Gaussian process | Data-driven network |
 |:------|:----:|:----:|:----:|:----:|:----:|
 | C-0.4 | 0.994 | 0.992 | 0.994 | 0.997 | 0.995 |
 | C-0.5 | 0.986 | 0.999 | 0.992 | 0.970 | 0.897 |

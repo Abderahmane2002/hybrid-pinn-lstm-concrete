@@ -103,12 +103,13 @@ def main():
     base = F[F.variant == "base"].set_index("Mix")
     S = []
     for v, g in F.groupby("variant"):
-        g = g.set_index("Mix").loc[base.index.intersection(g.index)]
+        g = g.set_index("Mix")
+        g = g.loc[base.index.intersection(g.index)]
         S.append({"variant": v, "dDv_mean": (g.log10_Dv - base.log10_Dv).mean(),
                   "dDv_maxabs": (g.log10_Dv - base.log10_Dv).abs().max(),
                   "dK_mean": (g.log10_K - base.log10_K).mean(), "dK_maxabs": (g.log10_K - base.log10_K).abs().max(),
                   "rmse_mean": g.rmse.mean(), "rmse_ratio": (g.rmse / base.rmse).mean(),
-                  "corr_max": g.corr.abs().max(), "n_at_bound": int(g.at_bound.sum()),
+                  "corr_max": g["corr"].abs().max(), "n_at_bound": int(g.at_bound.sum()),
                   # does the ranking of the mixes survive? (Spearman of the identified parameters)
                   "rank_Dv": g.log10_Dv.rank().corr(base.log10_Dv.rank()), "rank_K": g.log10_K.rank().corr(base.log10_K.rank())})
     S = pd.DataFrame(S)
