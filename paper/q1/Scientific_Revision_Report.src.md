@@ -63,7 +63,7 @@ All numbers below were computed by the scripts named in each section (repository
 * **Problem.** Only i.i.d. Gaussian noise had been tested, and only for the PENN and the data-driven network.
 * **Change.** `exp_robustness.py`: i.i.d. noise, correlated digitisation-like noise, time-origin errors, four reconstruction variants; classical, PENN, revised PENN, data-driven.
 * **Results.** Correlated noise: RMSE «rb_corr_001_ols» (OLS), «rb_corr_001_pen» (PENN), «rb_corr_001_mlp» (data-driven). Largest K_int shift under correlated noise: classical per-mix «rb_corr_001_ols_dk», PENN «rb_corr_001_pen_dk», revised PENN «rb_corr_001_pen_r_dk» decade.
-* **Effect.** Physics-based predictions are robust; per-mix K_int estimates are not, composition maps are. Manuscript: Section 5.5, Table 7, Fig. 7.
+* **Effect.** Physics-based predictions are robust. Per-mix K_int estimates are sensitive to digitisation-like errors; parameters predicted from composition are less so, and the very small shifts of the original PENN partly reflect its compression of K_int (section 9). Manuscript: Section 5.5, Table 7, Fig. 7.
 
 ## 8. Data efficiency
 
