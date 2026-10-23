@@ -9,4 +9,5 @@
 | PENN, linear composition map | 0.9928 ± 0.0001 | 0.0141 ± 0.0001 | 1 s^a^ |
 | PENN, 1 × 8 units | 0.9932 ± 0.0000 | 0.0137 ± 0.0000 | 1 s^a^ |
 | Data-driven network | 0.9852 ± 0.0012 | 0.0202 ± 0.0008 | 12 s |
+| Data-driven network, inner-CV setting | 0.9654 ± 0.0012 | 0.0309 ± 0.0005 | 12 s |
 | *Reference: classical fit to each withheld mix* | *0.9986* | *0.0063* | *41 s per mix* |

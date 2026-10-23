@@ -29,12 +29,12 @@ OUT.mkdir(parents=True, exist_ok=True)
 C, panel = mf.C, mf.panel
 TEST = mf.TEST
 # fixed entity -> colour / marker (validated order: blue, aqua, orange, violet, yellow, magenta)
-COL = {"pen": "#2a78d6", "ols": "#1baf7a", "mlp": "#eb6834", "pen_r": "#6250d6", "gp": "#eda100", "quad": "#e87ba4",
+COL = {"mlp_icv": "#8a8984", "pen": "#2a78d6", "ols": "#1baf7a", "mlp": "#eb6834", "pen_r": "#6250d6", "gp": "#eda100", "quad": "#e87ba4",
        "ridge": "#0d8a5f", "pen_lin": "#7fb2ea", "pen_s": "#2a78d6"}
-MK = {"pen": "o", "ols": "s", "mlp": "^", "pen_r": "D", "gp": "v", "quad": "P", "ridge": "X", "pen_lin": "h", "pen_s": "*"}
+MK = {"mlp_icv": "<", "pen": "o", "ols": "s", "mlp": "^", "pen_r": "D", "gp": "v", "quad": "P", "ridge": "X", "pen_lin": "h", "pen_s": "*"}
 NAME = {"pen": "PENN", "pen_r": "PENN, revised", "pen_lin": "PENN, linear map", "pen_s": "PENN, 1 × 8",
         "ols": "Two-stage, linear", "ridge": "Two-stage, ridge", "quad": "Two-stage, quadratic",
-        "gp": "Two-stage, Gaussian process", "mlp": "Data-driven network"}
+        "gp": "Two-stage, Gaussian process", "mlp": "Data-driven network", "mlp_icv": "Data-driven, inner CV"}
 
 
 def save(fig, name):
@@ -95,6 +95,7 @@ def fig01_data():
 def fig04_identifiability():
     P = pd.read_csv(Q / "profiles/profiles.csv")
     I = pd.read_csv(Q / "profiles/intervals.csv").set_index("Mix")
+    IC = pd.read_csv(Q / "profiles/intervals_calibrated.csv").set_index("Mix")
     C1 = pd.read_csv(Q / "synthetic/c1.csv")
     fig, axes = plt.subplots(2, 2, figsize=(7.2, 5.6))
     fig.subplots_adjust(hspace=0.45, wspace=0.32)
@@ -107,8 +108,11 @@ def fig04_identifiability():
             ax.plot(g.value, g.deviance_eff, "-", color=c, lw=1.2, label=f"{mix} ($N_{{eff}}$ = {I.loc[mix, 'N_eff']:.0f})")
             k = g.deviance_eff.idxmin()
             ax.plot(g.value[k], 0, mk, color=c, ms=4)
-        ax.axhline(3.84, color=C["muted"], ls="--", lw=0.8)
-        ax.text(0.02, 3.84, " 95 %", color=C["muted"], va="bottom", fontsize=7, transform=ax.get_yaxis_transform())
+        cfac = IC["c_K" if par == "log10_K" else "c_Dv"].iloc[0]
+        ax.axhline(3.84 * cfac, color=C["data"], ls="--", lw=0.8)
+        ax.text(0.02, 3.84 * cfac, " 95 %, calibrated", color=C["data"], va="bottom", fontsize=6.5,
+                transform=ax.get_yaxis_transform())
+        ax.axhline(3.84, color=C["muted"], ls=":", lw=0.8)
         ax.set_ylim(0, 12)
         if par == "log10_K":
             ax.set_xlim(-21, -18.5)
@@ -119,17 +123,21 @@ def fig04_identifiability():
         panel(ax, letter)
     axes[0, 0].legend(loc="upper right", fontsize=6.5)
     ax = axes[1, 0]
-    I = I.reset_index()
+    I = I.join(IC[["K_lo_cal", "K_hi_cal", "K_at_bound"]]).reset_index()
     I["wb"] = I.Mix.str.split("-").str[1].astype(float)
     I = I.sort_values(["wb", "log10_K"]).reset_index(drop=True)
     y = np.arange(len(I))
-    ax.hlines(y, I.K_lo_eff, I.K_hi_eff, color=COL["ols"], lw=2.2, label="corrected 95 % interval")
-    ax.hlines(y, I.K_lo, I.K_hi, color=C["data"], lw=0.9, label="uncorrected")
+    ax.hlines(y, I.K_lo_cal, I.K_hi_cal, color=COL["ols"], lw=2.2, label="calibrated 95 % interval")
+    ax.hlines(y, I.K_lo, I.K_hi, color=C["data"], lw=0.9, label="independent errors assumed")
+    for yy, (lo, hi, b) in enumerate(zip(I.K_lo_cal, I.K_hi_cal, I.K_at_bound)):
+        if b:
+            ax.annotate("", xy=(lo - 0.12, yy), xytext=(lo, yy), arrowprops=dict(arrowstyle="-|>", color=COL["ols"], lw=1.2))
+    ax.set_xlim(-21.25, -18.4)
     ax.plot(I.log10_K, y, "|", color=C["data"], ms=7)
     ax.set_yticks(y)
     ax.set_yticklabels(I.Mix, fontsize=6.3)
     ax.set_xlabel(r"$\log_{10} K_\mathrm{int}$ (m$^2$)")
-    ax.legend(loc="upper left", fontsize=6.5)
+    ax.legend(loc="lower right", fontsize=6, handlelength=1.2)
     ax.grid(axis="y", visible=False)
     panel(ax, "c")
     ax = axes[1, 1]
@@ -156,21 +164,21 @@ def fig06_comparison():
     pooled = pd.read_csv(Q / "baselines/pooled.csv")
     pm = pd.read_csv(Q / "baselines/permix.csv")
     paired = pd.read_csv(Q / "audit/paired.csv")
-    meths = ["pen", "pen_r", "ols", "gp", "quad", "mlp"]
+    meths = ["pen", "pen_r", "ols", "gp", "quad", "mlp", "mlp_icv"]
     fig = plt.figure(figsize=(7.2, 6.4))
     gs = fig.add_gridspec(2, 2, height_ratios=[1, 1.05], hspace=0.5, wspace=0.32)
     ax = fig.add_subplot(gs[0, 0])
     schemes = [("holdout", "Hold-out"), ("lomo", "Leave one\nmix out"), ("lofo", "Leave one\nfamily out")]
     for i, m in enumerate(meths):
         v = [pooled[(pooled.scheme == s) & (pooled.method == m)].rmse.iloc[0] for s, _ in schemes]
-        ax.plot(np.arange(3) + (i - 2.5) * 0.11, v, MK[m], color=COL[m], ms=5, mfc=COL[m], mec="white", mew=0.4,
+        ax.plot(np.arange(3) + (i - 3) * 0.1, v, MK[m], color=COL[m], ms=5, mfc=COL[m], mec="white", mew=0.4,
                 label=NAME[m], ls="")
     ax.set_xticks(range(3))
     ax.set_xticklabels([s[1] for s in schemes])
     ax.set_ylabel("Pooled RMSE")
-    ax.set_ylim(0, None)
+    ax.set_ylim(0, 0.078)
     panel(ax, "a")
-    ax.legend(loc="upper left", fontsize=6.5, ncol=1)
+    ax.legend(loc="upper left", fontsize=5.8, ncol=2, columnspacing=0.6, handletextpad=0.3)
     ax = fig.add_subplot(gs[0, 1])
     lofo = pm[(pm.scheme == "lofo") & (pm.seed == 0)]
     for i, m in enumerate(meths):
@@ -180,18 +188,19 @@ def fig06_comparison():
         ax.plot(x, y, MK[m], color=COL[m], ms=3.6, mfc="none", mew=0.8)
         nlow = int((g.r2 < 0.80).sum())
         if nlow:
-            ax.text(i, 0.792, f"{nlow} below\nmin {g.r2.min():.2f}", ha="center", va="top", fontsize=5.6, color=C["data"],
+            ax.text(i, 0.792, f"{nlow} <0.8\nmin\n{g.r2.min():.2f}", ha="center", va="top", fontsize=5.4, color=C["data"],
                     linespacing=1.1)
     ax.axhline(0.95, color=C["muted"], ls="--", lw=0.8)
-    ax.set_ylim(0.74, 1.005)
+    ax.set_ylim(0.72, 1.005)
     ax.set_xticks(range(len(meths)))
-    ax.set_xticklabels([NAME[m].replace("Two-stage, ", "").replace(", revised", "\nrevised").replace("Data-driven network", "Data-\ndriven")
-                        .replace("Gaussian process", "GP") for m in meths], fontsize=6.8)
+    short = {"pen": "PENN", "pen_r": "PENN\nrev.", "ols": "linear", "gp": "GP", "quad": "quad.", "mlp": "data-\ndriven",
+             "mlp_icv": "data-\ndriven\n(inner\nCV)"}
+    ax.set_xticklabels([short[m] for m in meths], fontsize=6.4)
     ax.set_ylabel(r"$R^2$ per mix (family withheld)")
     panel(ax, "b")
     ax = fig.add_subplot(gs[1, :])
-    pairs = [("pen", "ols"), ("pen_r", "ols"), ("pen", "pen_r"), ("pen", "mlp"), ("ols", "mlp"), ("pen", "gp"),
-             ("ols", "gp"), ("pen", "quad"), ("ols", "quad")]
+    pairs = [("pen", "ols"), ("pen_r", "ols"), ("pen", "pen_r"), ("pen", "mlp"), ("ols", "mlp"), ("pen", "mlp_icv"),
+             ("pen", "gp"), ("ols", "gp"), ("pen", "quad"), ("ols", "quad")]
     yl = []
     for j, (a, b) in enumerate(pairs):
         for k, (sch, off, mk, c) in enumerate((("lomo", -0.15, "o", C["data"]), ("lofo", 0.15, "s", COL["pen"]))):
@@ -349,7 +358,7 @@ def fig09_pinn():
 
 def fig10_parameters():
     th = pd.read_csv(ROOT / "results/disc/theta_all.csv").set_index("Mix")
-    I = pd.read_csv(Q / "profiles/intervals.csv").set_index("Mix")
+    I = pd.read_csv(Q / "profiles/intervals_calibrated.csv").set_index("Mix")
     # parameter maps over all 20 mixes from the hold-out models: PENN (results/disc runs) and revised PENN
     pr = pd.read_csv(Q / "baselines/pen_r_all_theta.csv").groupby("Mix")[["log10_Dv", "log10_K"]].agg(["mean", "std"])
     th["wb"] = [float(m.split("-")[1]) for m in th.index]
@@ -363,7 +372,7 @@ def fig10_parameters():
             if not len(g):
                 continue
             j = (list(mf.MARK).index(fam) - 3) * 0.008
-            lo, hi = I.loc[g.index, f"{kk}_lo_eff"], I.loc[g.index, f"{kk}_hi_eff"]
+            lo, hi = I.loc[g.index, f"{kk}_lo_cal"], I.loc[g.index, f"{kk}_hi_cal"]
             ax.errorbar(g.wb + j - 0.0025, g[f"{k}_fd"], yerr=[np.maximum(g[f"{k}_fd"] - lo, 0), np.maximum(hi - g[f"{k}_fd"], 0)], fmt=mk, ms=4.3,
                         mfc="none", mec=COL["ols"], mew=0.9, ecolor=COL["ols"], elinewidth=0.7, capsize=0)
             ax.plot(g.wb + j, g[f"{k}_pen"], mk, ms=4.3, color=COL["pen"], mec="white", mew=0.4)
@@ -373,7 +382,7 @@ def fig10_parameters():
         ax.set_xticks([0.3, 0.4, 0.5])
         panel(ax, letter)
     h = [plt.Line2D([], [], marker=m, ls="", color=C["muted"], label=f) for f, m in mf.MARK.items()]
-    h += [plt.Line2D([], [], marker="o", ls="", mfc="none", mec=COL["ols"], label="Classical fit, 95 % profile interval"),
+    h += [plt.Line2D([], [], marker="o", ls="", mfc="none", mec=COL["ols"], label="Classical fit, calibrated 95 % interval"),
           plt.Line2D([], [], marker="o", ls="", color=COL["pen"], label="PENN"),
           plt.Line2D([], [], marker="o", ls="", color=COL["pen_r"], label="PENN, revised")]
     fig.legend(handles=h, loc="lower center", ncol=5, bbox_to_anchor=(0.5, -0.03), handletextpad=0.2, columnspacing=0.8)

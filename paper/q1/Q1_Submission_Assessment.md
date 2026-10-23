@@ -6,9 +6,9 @@ This assessment was written after all revision analyses were completed. It reads
 
 What is new:
 
-1. A **practical identifiability analysis** of a vapour–capillary drying model of real disc specimens: profile likelihoods corrected for the autocorrelation of digitised residuals, synthetic recovery tests and a one-at-a-time sensitivity study of every fixed constant. The result is precise: D_v is known within a median 95 % interval of 0.03 decade, K_int only to a few tenths of a decade (median interval 0.32 decade) and only conditionally on the constants.
-2. A **controlled, statistically sound comparison** of end-to-end (physics-embedded) and two-stage learning of composition → transport parameters, with eight models under identical folds and mix-level paired statistics. It shows that the two routes are equivalent on complete data. What generalises to a new binder family is the transport model combined with a low-capacity composition map; flexible maps fail even when they use the transport model.
-3. A **mechanistic explanation of PINN parameter inconsistency** for this problem. The K_int bias (≈ 1.1 decade) survives exact synthetic data, a warm start and a ten-fold PDE weight. The PINN loss is flat along K_int.
+1. A **practical identifiability analysis** of a vapour–capillary drying model of real disc specimens: profile likelihoods corrected for the autocorrelation of digitised residuals and calibrated by simulation, synthetic recovery tests and a one-at-a-time sensitivity study of every fixed constant. The result is precise: D_v is known within a median 95 % interval of 0.05 decade, K_int only to a few tenths of a decade (median interval 0.42 decade, one-sided for 3 mixes) and only conditionally on the constants.
+2. A **controlled, statistically sound comparison** of end-to-end (physics-embedded) and two-stage learning of composition → transport parameters, with eight models (plus a second, inner-CV-selected data-driven baseline) under identical folds and mix- and family-level paired statistics. It finds no statistically detectable difference between the two routes on complete data, with family-level 90 % intervals within a ±0.002 RMSE margin set in this revision; this is evidence of similar accuracy under the conditions studied, not proof of equivalence. What generalises to a new binder family is the transport model combined with a low-capacity composition map; flexible maps fail even when they use the transport model.
+3. A **diagnostic account of PINN parameter inconsistency** for this problem (the cause is indicated, not proven). The K_int bias (≈ 1.1 decade) survives exact synthetic data, a warm start and a ten-fold PDE weight. The PINN loss appears nearly flat along K_int.
 4. A documented **pitfall of learned-parameter models**: weight decay and an under-converged optimiser compress a weakly identifiable parameter without affecting predictions. It is revealed only by synthetic recovery and fixed by a converged linear map.
 
 What is not new: differentiable-solver learning itself (Bandai et al. 2024 for soils; differentiable physics in general), and the transport model (Chen et al. 2022). The paper's contribution is methodological and diagnostic, not a new model, and the manuscript says so.
@@ -23,13 +23,14 @@ What is not new: differentiable-solver learning itself (Bandai et al. 2024 for s
 | PENN (original) | 0.0137 (0.9931) | 0.0156 | 0.0160 | 0.968 |
 | PENN (revised) | 0.0132 (0.9937) | 0.0150 | 0.0156 | 0.962 |
 | Two-stage, Gaussian process | 0.0204 (0.9849) | 0.0223 | 0.0371 | 0.381 |
-| Data-driven network | 0.0202 (0.9852) | 0.0188 | 0.0415 | 0.218 |
+| Data-driven network (original setting) | 0.0202 (0.9852) | 0.0188 | 0.0415 | 0.218 |
+| Data-driven network (inner-CV setting) | 0.0309 (0.9654) | 0.0326 | 0.0335 | 0.832 |
 
-All values were recomputed in this revision. The original values were reproduced independently (44/44 quantities).
+All values were recomputed in this revision. The original values were reproduced independently (46/46 quantities).
 
 ## 3. Comparison with classical methods
 
-The PENN does **not** outperform classical inversion followed by linear regression. Paired per-mix differences are not significant (LOMO p = 0.09, LOFO p = 0.22). Classical inversion remains the reference for per-mix parameter estimation. The PENN's demonstrated advantages are:
+The PENN does **not** outperform classical inversion followed by linear regression. No statistically detectable difference: paired per-mix tests give LOMO p = 0.09 and LOFO p = 0.22; with the binder family as the unit, p = 0.375 and 0.469, and the 90 % family-level intervals (−0.0009 to +0.0018; −0.0003 to +0.0012) lie within ±0.002 RMSE. The manuscript avoids calling the methods equivalent and states the margin was set during the revision. Classical inversion remains the reference for per-mix parameter estimation. The PENN's demonstrated advantages are:
 
 - robustness with short curves (0.0138 vs 0.0165 RMSE with 7-day curves);
 - stability with very few training mixes for the regularised original PENN (0.0220 vs 0.0256 with 5 mixes);
@@ -44,7 +45,7 @@ The manuscript states this plainly (Sections 5.4, 5.5 and 6.1, and Conclusions 2
 
 *Major*
 
-- **R1.1** The study uses a single, digitised dataset from one laboratory and one drying condition, and the curing age of the curves (28 or 56 d) is not identified. *Status:* disclosed (Sections 2.1 and 6.3); the authors must state the curing age. This cannot be fixed by computation.
+- **R1.1** The study uses a single, digitised dataset from one laboratory and one drying condition, and the curing age of the curves (28 or 56 d) was not recorded with the digitised figure. *Status:* partly addressed. Section 2.4 compares the time to 70 % saturation of the reconstructed curves (mean 1.60, 0.95, 0.62 d for w/b 0.3, 0.4, 0.5) with the 28-day values tabulated in the source, which supports 28 d; Section 5.8 states that composition effects are interpreted for that age. The authors should still confirm it from the source.
 - **R1.2** There is no independent experimental validation of D_v and K_int: no sorption isotherms, permeability tests or measured moisture profiles. *Status:* disclosed and framed as "consistency, not validation". It remains the main scientific weakness.
 - **R1.3** Eight of 28 mixes (w/b = 0.6, S20-0.5) are excluded. The trends therefore cover w/b 0.3–0.5 only. *Status:* disclosed; re-digitisation is recommended.
 
@@ -63,7 +64,7 @@ The manuscript states this plainly (Sections 5.4, 5.5 and 6.1, and Conclusions 2
 
 *Minor*
 
-- **R2.4** The autocorrelation correction (lag-1, AR(1) effective sample size) is approximate; a block bootstrap of residuals would be an alternative. *Suggested response:* mention it as a sensitivity check, or add it if requested.
+- **R2.4** Are the corrected intervals calibrated? *Status:* addressed by a correlated-error coverage simulation (Section 4.2). The N_eff correction alone gave 88–90 % coverage, and the intervals are now calibrated to 95 % and labelled approximate. A residual block bootstrap could serve as an independent check if a reviewer asks for one.
 - **R2.5** The sealed-lateral-face test supports unsealed drying, but the evidence is indirect. *Status:* stated as supporting, not proving.
 
 ### Reviewer 3: scientific machine learning
@@ -71,7 +72,7 @@ The manuscript states this plainly (Sections 5.4, 5.5 and 6.1, and Conclusions 2
 *Major*
 
 - **R3.1** Novelty relative to differentiable-physics learning (Bandai et al. 2024). *Status:* cited. The contribution is framed as identifiability, generalisation and consistency rather than a new method.
-- **R3.2** Fairness of the baselines and hyper-parameter tuning. *Status:* addressed. Eight models run on identical folds, and an inner CV on training mixes shows that the settings were not test-tuned (Appendix C). The data-driven baseline was not handicapped.
+- **R3.2** Fairness of the baselines and hyper-parameter tuning. *Status:* addressed. Eight models run on identical folds. The original PENN and data-driven settings were fixed before this analysis and are kept as primary for both; the inner CV on training mixes confirms the PENN setting but prefers a stronger weight decay for the data-driven network (original setting ranks last of four). That inner-CV setting is now evaluated in all schemes and reported alongside (Section 4.3, Tables 4 and 6, Fig. 6, Appendix C). The LOFO conclusion holds for both settings; the LOMO comparison with the data-driven network depends on the setting, and the text says so. Test accuracy was not used to choose the primary setting.
 - **R3.3** Is the PINN comparison fair, and does it generalise? *Status:* addressed by the diagnostic runs (Section 5.7). The conclusion is explicitly restricted to the formulation tested. A reviewer may still ask for a different PINN architecture. *Suggested response:* explain that the diagnostics isolate a loss-landscape property, and offer one additional variant if requested.
 
 *Minor*

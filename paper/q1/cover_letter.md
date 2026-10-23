@@ -9,7 +9,7 @@ Moisture transport parameters of concrete are usually identified from drying or 
 The main findings are:
 
 - Drying curves identify two parameters per mix. The reference diffusivity is precise; the permeability is uncertain to a few tenths of a decade and depends on fixed constitutive constants. We quantify both with profile likelihoods, synthetic recovery tests and a sensitivity study.
-- A physics-embedded network trained through the transport solver and classical inversion followed by linear regression predict withheld mixes equally well (R² = 0.9931 and 0.9934). When a whole binder family is withheld, only models that combine the transport model with a simple composition map remain accurate.
+- A physics-embedded network trained through the transport solver and classical inversion followed by linear regression predict withheld mixes with similar accuracy (R² = 0.9931 and 0.9934); no statistically detectable difference was found between them, with mixes or binder families as the statistical unit. When a whole binder family is withheld, only models that combine the transport model with a simple composition map remain accurate.
 - End-to-end training is more robust when the drying curves are short.
 - A physics-informed neural network fits the same data with permeabilities about one order of magnitude too low. Diagnostic runs show that this is a property of its soft-constrained loss.
 

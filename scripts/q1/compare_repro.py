@@ -29,9 +29,11 @@ def main(repro: Path):
     # data
     for f, key in (("data/processed/drying_clean.csv", None),):
         a, b = pd.read_csv(ROOT / f), pd.read_csv(repro / f)
-        add("Cleaned data: number of points", len(a), len(b), 0)
-        add("Cleaned data: largest difference in S", 0.0, float((a.S_frac - b.S_frac).abs().max()), 1e-12)
-        add("Cleaned data: largest difference in t (d)", 0.0, float((a.Time_d - b.Time_d).abs().max()), 1e-12)
+        add("Reconstructed data file: all points (incl. flagged w/b = 0.6)", len(a), len(b), 0)
+        add("Reconstructed data file: flagged w/b = 0.6 points (excluded)", int((~a.reliable).sum()), int((~b.reliable).sum()), 0)
+        add("Points used in the analyses (w/b ≤ 0.5)", int(a.reliable.sum()), int(b.reliable.sum()), 0)
+        add("Reconstructed data: largest difference in S", 0.0, float((a.S_frac - b.S_frac).abs().max()), 1e-12)
+        add("Reconstructed data: largest difference in t (d)", 0.0, float((a.Time_d - b.Time_d).abs().max()), 1e-12)
     # classical fits
     for geo in ("disc", "slab"):
         a = pd.read_csv(O / geo / "classical_fits.csv").set_index("Mix")

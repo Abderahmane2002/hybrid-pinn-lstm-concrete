@@ -1,8 +1,10 @@
 | Quantity | Original | Re-run | Status |
 |:----------------------------------------|:----:|:----:|:----:|
-| Cleaned data: number of points | 1001 | 1001 | reproduced |
-| Cleaned data: largest difference in S | 0 | 0 | reproduced |
-| Cleaned data: largest difference in t (d) | 0 | 0 | reproduced |
+| Reconstructed data file: all points (incl. flagged w/b = 0.6) | 1001 | 1001 | reproduced |
+| Reconstructed data file: flagged w/b = 0.6 points (excluded) | 69 | 69 | reproduced |
+| Points used in the analyses (w/b <= 0.5) | 932 | 932 | reproduced |
+| Reconstructed data: largest difference in S | 0 | 0 | reproduced |
+| Reconstructed data: largest difference in t (d) | 0 | 0 | reproduced |
 | Disc: classical $\log_{10} D_v$, largest difference | 0 | 0.0001568 | reproduced |
 | Disc: classical $\log_{10} K_{\text{int}}$, largest difference | 0 | 0.001002 | reproduced |
 | Disc: classical fits, median R² | 0.9986 | 0.9986 | reproduced |

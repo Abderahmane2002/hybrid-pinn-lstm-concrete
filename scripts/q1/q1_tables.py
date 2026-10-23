@@ -17,8 +17,8 @@ OUT = Q / "tables"
 OUT.mkdir(parents=True, exist_ok=True)
 NAME = {"pen": "PENN", "pen_r": "PENN, revised (linear map, L-BFGS)", "pen_lin": "PENN, linear composition map",
         "pen_s": "PENN, 1 × 8 units", "ols": "Two-stage, linear (OLS)", "ridge": "Two-stage, ridge",
-        "quad": "Two-stage, quadratic", "gp": "Two-stage, Gaussian process", "mlp": "Data-driven network"}
-ORDER = ["ols", "ridge", "quad", "gp", "pen", "pen_r", "pen_lin", "pen_s", "mlp"]
+        "quad": "Two-stage, quadratic", "gp": "Two-stage, Gaussian process", "mlp": "Data-driven network", "mlp_icv": "Data-driven network, inner-CV setting"}
+ORDER = ["ols", "ridge", "quad", "gp", "pen", "pen_r", "pen_lin", "pen_s", "mlp", "mlp_icv"]
 
 
 def write(name, lines):
@@ -53,7 +53,7 @@ def holdout():
     L = ["| Method | $R^2$ | RMSE | Training time |", "|:------------------------------------|:--------------:|:--------------:|:-----------:|"]
     for m in ORDER:
         r = P.loc[("holdout", m)]
-        if m == "mlp":
+        if m in ("mlp", "mlp_icv"):
             t = f"{m0['mlp']['time_s']:.0f} s"
         elif m.startswith("pen"):
             tt = T.loc[('holdout', m), 'time_s']

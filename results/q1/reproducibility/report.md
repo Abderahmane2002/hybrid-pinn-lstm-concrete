@@ -4,9 +4,11 @@ Independent re-run from a clean clone (`/home/claude/work/repro`), all results r
 
 | Item | Manuscript | Re-run | |diff| | Status |
 |---|---|---|---|---|
-| Cleaned data: number of points | 1001 | 1001 | 0 | reproduced |
-| Cleaned data: largest difference in S | 0 | 0 | 0 | reproduced |
-| Cleaned data: largest difference in t (d) | 0 | 0 | 0 | reproduced |
+| Reconstructed data file: all points (incl. flagged w/b = 0.6) | 1001 | 1001 | 0 | reproduced |
+| Reconstructed data file: flagged w/b = 0.6 points (excluded) | 69 | 69 | 0 | reproduced |
+| Points used in the analyses (w/b <= 0.5) | 932 | 932 | 0 | reproduced |
+| Reconstructed data: largest difference in S | 0 | 0 | 0 | reproduced |
+| Reconstructed data: largest difference in t (d) | 0 | 0 | 0 | reproduced |
 | Disc: classical log10 Dv, largest difference | 0 | 0.000156831 | 0.00016 | reproduced |
 | Disc: classical log10 Kint, largest difference | 0 | 0.00100189 | 0.001 | reproduced |
 | Disc: classical fits, median R2 | 0.998562 | 0.998562 | 1.2e-08 | reproduced |

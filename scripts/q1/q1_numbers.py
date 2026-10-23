@@ -23,6 +23,9 @@ def put(k, v, fmt="{:.4f}"):
 
 def main():
     # ---- data reconstruction
+    dc = pd.read_csv(ROOT / "data/processed/drying_clean.csv")
+    put("n_file_pts", len(dc), "{:,}")
+    put("n_flag_pts", int((~dc.reliable).sum()), "{:.0f}")
     sr = pd.read_csv(Q / "series_relation.csv")
     s5 = sr[sr.wb < 0.55]
     put("series_shift_rms", s5.shift_rms_S.median(), "{:.3f}")
@@ -32,18 +35,36 @@ def main():
     put("series_affine_hi", s5.affine_l.quantile(.75), "{:.2f}")
     put("series_scale_factor", s5.scale_rms_S.median() / s5.shift_rms_S.median(), "{:.0f}")
     put("shift_train", float((Q / "robustness/shift_train.txt").read_text()), "{:.2f}")
+    ca = pd.read_csv(Q / "curing_age/summary.csv").set_index("wb")
+    for wb, tag in ((0.3, "03"), (0.4, "04"), (0.5, "05")):
+        put(f"ca_t70_{tag}", ca.loc[wb, "t70_mean"], "{:.2f}")
+        put(f"ca_spread_{tag}", ca.loc[wb, "spread_d"], "{:.1f}")
+    cr = json.loads((Q / "curing_age/result.json").read_text())
+    put("ca_spread_max", cr["max_spread_d"], "{:.1f}")
+    put("ca_dev_short", cr["mean_abs_dev_short_origin"], "{:.2f}")
+    put("ca_dev_long", cr["mean_abs_dev_long_origin"], "{:.1f}")
     # ---- identifiability: profiles and synthetic recovery
     I = pd.read_csv(Q / "profiles/intervals.csv")
-    put("prof_dv_med", I.Dv_width_eff.median(), "{:.2f}")
-    put("prof_k_med", I.K_width_eff.median(), "{:.2f}")
-    put("prof_k_max", I.K_width_eff.max(), "{:.1f}")
-    put("prof_k_max_mix", I.loc[I.K_width_eff.idxmax(), "Mix"])
-    put("prof_dv_max", I.Dv_width_eff.max(), "{:.2f}")
+    IC = pd.read_csv(Q / "profiles/intervals_calibrated.csv")
+    put("prof_dv_med", IC.Dv_width_cal.median(), "{:.2f}")
+    put("prof_k_med", IC.K_width_cal.median(), "{:.2f}")
+    put("prof_k_max", IC.K_width_cal.max(), "{:.1f}")
+    put("prof_dv_max", IC.Dv_width_cal.max(), "{:.2f}")
+    put("prof_k_nbound", int(IC.K_at_bound.sum()), "{:.0f}")
+    put("prof_k_bound_mixes", ", ".join(sorted(IC[IC.K_at_bound].Mix)))
+    put("prof_k_med_neff", I.K_width_eff.median(), "{:.2f}")
+    put("prof_dv_med_neff", I.Dv_width_eff.median(), "{:.2f}")
+    CV = pd.read_csv(Q / "interval_calibration/coverage.csv")
+    CA = CV[CV.subset == "all mixes"].set_index("param")
+    for par in ("K", "Dv"):
+        put(f"cov_unc_{par}", 100 * CA.loc[par, "coverage_uncorrected"], "{:.0f}")
+        put(f"cov_corr_{par}", 100 * CA.loc[par, "coverage_corrected"], "{:.0f}")
+        put(f"cov_wald_{par}", 100 * CA.loc[par, "coverage_wald_iid"], "{:.0f}")
+        put(f"calib_{par}", CA.loc[par, "calib_factor_corrected"], "{:.2f}")
     put("prof_rho_med", I.rho1.median(), "{:.2f}")
     put("prof_neff_med", I.N_eff.median(), "{:.0f}")
     put("prof_n_med", I.N.median(), "{:.0f}")
     put("prof_k_unc_med", (I.K_hi - I.K_lo).median(), "{:.2f}")
-    put("prof_all_interior", "all" if (I.K_interior & I.Dv_interior).all() else "not all")
     c1 = pd.read_csv(Q / "synthetic/summary_c1.csv").set_index("cond")
     put("syn_exact_dv", c1.loc["exact", "maxabs_Dv"], "{:.3f}")
     put("syn_exact_k", c1.loc["exact", "maxabs_K"], "{:.3f}")
@@ -65,7 +86,7 @@ def main():
     # ---- model comparison
     P = pd.read_csv(Q / "baselines/pooled.csv").set_index(["scheme", "method"])
     for sch in ("holdout", "lomo", "lofo"):
-        for m in ("pen", "pen_r", "pen_lin", "pen_s", "ols", "ridge", "quad", "gp", "mlp"):
+        for m in ("pen", "pen_r", "pen_lin", "pen_s", "ols", "ridge", "quad", "gp", "mlp", "mlp_icv"):
             if (sch, m) in P.index:
                 r = P.loc[(sch, m)]
                 tag = {"holdout": "ho", "lomo": "lomo", "lofo": "lofo"}[sch]
@@ -76,7 +97,7 @@ def main():
                 if sch == "holdout" and np.isfinite(r.rmse_sd):
                     put(f"ho_{m}_rmse_sd", r.rmse_sd)
                     put(f"ho_{m}_r2_sd", r.r2_sd)
-    flex = [P.loc[("lofo", m), "r2_mix_min"] for m in ("gp", "quad", "mlp")]
+    flex = [P.loc[("lofo", m), "r2_mix_min"] for m in ("gp", "quad", "mlp")]          # original-study baselines
     phys = [P.loc[("lofo", m), "r2_mix_min"] for m in ("ols", "ridge", "pen", "pen_r", "pen_lin")]
     put("lofo_min_flex", min(flex), "{:.2f}")
     put("lofo_max_flex", max(flex), "{:.2f}")
@@ -87,9 +108,15 @@ def main():
         return pa[(pa.scheme == sch) & (pa.a == a) & (pa.b == b)].iloc[0]
     for sch in ("lomo", "lofo"):
         for a, b in (("pen", "ols"), ("pen_r", "ols"), ("pen", "mlp"), ("ols", "mlp"), ("pen", "gp"), ("pen", "quad"),
-                     ("pen", "pen_r"), ("ols", "gp"), ("ols", "quad")):
+                     ("pen", "pen_r"), ("ols", "gp"), ("ols", "quad"), ("pen", "mlp_icv"), ("ols", "mlp_icv")):
             r = pair(sch, a, b)
             k = f"pair_{sch}_{a}_{b}"
+            put(k + "_flo", r.fam_ci_lo, "{:+.4f}")
+            put(k + "_fhi", r.fam_ci_hi, "{:+.4f}")
+            put(k + "_f90lo", r.fam_ci90_lo, "{:+.4f}")
+            put(k + "_f90hi", r.fam_ci90_hi, "{:+.4f}")
+            put(k + "_fp", r.fam_wilcoxon_p, "{:.3f}")
+            put(k + "_eq", "yes" if r.equivalent_within_margin else "no")
             put(k + "_d", r.mean_diff, "{:+.4f}")
             put(k + "_lo", r.ci_lo, "{:+.4f}")
             put(k + "_hi", r.ci_hi, "{:+.4f}")
@@ -132,10 +159,10 @@ def main():
     put("thr_Dv_mae", (rr.log10_Dv - th.log10_Dv_fd).abs().mean(), "{:.3f}")
     put("thr_K_lo", rr.log10_K.min(), "{:.2f}")
     put("thr_K_hi", rr.log10_K.max(), "{:.2f}")
-    I2 = pd.read_csv(Q / "profiles/intervals.csv").set_index("Mix").loc[th.index]
-    inside = ((rr.log10_K >= I2.K_lo_eff - 1e-9) & (rr.log10_K <= I2.K_hi_eff + 1e-9))
+    I2 = pd.read_csv(Q / "profiles/intervals_calibrated.csv").set_index("Mix").loc[th.index]
+    inside = ((rr.log10_K >= I2.K_lo_cal - 1e-9) & (rr.log10_K <= I2.K_hi_cal + 1e-9))
     put("thr_K_inside", int(inside.sum()), "{:.0f}")
-    inside0 = ((th.log10_K_pen >= I2.K_lo_eff) & (th.log10_K_pen <= I2.K_hi_eff))
+    inside0 = ((th.log10_K_pen >= I2.K_lo_cal) & (th.log10_K_pen <= I2.K_hi_cal))
     put("th_K_inside", int(inside0.sum()), "{:.0f}")
     put("pen_r_time", pd.read_csv(Q / "baselines/pen_r_all_theta.csv").train_time_s.mean(), "{:.0f}")
     # ---- data efficiency and truncation

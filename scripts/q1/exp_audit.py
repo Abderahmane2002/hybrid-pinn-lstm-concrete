@@ -16,7 +16,9 @@ import numpy as np
 import pandas as pd
 from scipy.stats import wilcoxon
 
-from common import ROOT, TEST_MIXES, out_dir
+from common import ROOT, TEST_MIXES, family, out_dir
+
+MARGIN = 0.002   # practical equivalence margin on the per-mix RMSE (about 1/3 of the median direct-fit RMSE)
 from exp_robustness import train_shift
 
 
@@ -41,15 +43,31 @@ def main():
     res = []
     for scheme in ("lomo", "lofo"):
         w = pm[pm.scheme == scheme].pivot(index="Mix", columns="method", values="rmse")
+        fam = np.array([family(m) for m in w.index])
+        ufam = np.unique(fam)
         for a, b in (("pen", "ols"), ("pen_r", "ols"), ("pen", "ridge"), ("pen", "pen_lin"), ("pen", "pen_r"),
-                     ("pen", "mlp"), ("pen_r", "mlp"), ("pen", "gp"), ("pen", "quad"), ("ols", "mlp"), ("ols", "gp"),
-                     ("ols", "quad")):
+                     ("pen", "mlp"), ("pen_r", "mlp"), ("pen", "mlp_icv"), ("ols", "mlp_icv"), ("pen", "gp"),
+                     ("pen", "quad"), ("ols", "mlp"), ("ols", "gp"), ("ols", "quad")):
+            if a not in w or b not in w:
+                continue
             diff = (w[a] - w[b]).to_numpy()
             boots = np.array([diff[rng.integers(0, len(diff), len(diff))].mean() for _ in range(10000)])
+            # cluster bootstrap: resample binder families, keep all mixes of a drawn family
+            fb = []
+            for _ in range(10000):
+                pick = rng.choice(ufam, len(ufam), replace=True)
+                fb.append(np.concatenate([diff[fam == f] for f in pick]).mean())
+            fb = np.array(fb)
+            fmeans = np.array([diff[fam == f].mean() for f in ufam])
+            lo90, hi90 = np.percentile(fb, 5), np.percentile(fb, 95)
             res.append({"scheme": scheme, "a": a, "b": b, "mean_rmse_a": w[a].mean(), "mean_rmse_b": w[b].mean(),
                         "mean_diff": diff.mean(), "ci_lo": np.percentile(boots, 2.5), "ci_hi": np.percentile(boots, 97.5),
                         "a_better_in": int((diff < 0).sum()), "n_mixes": len(diff),
-                        "wilcoxon_p": float(wilcoxon(diff).pvalue)})
+                        "wilcoxon_p": float(wilcoxon(diff).pvalue),
+                        "fam_ci_lo": np.percentile(fb, 2.5), "fam_ci_hi": np.percentile(fb, 97.5),
+                        "fam_wilcoxon_p": float(wilcoxon(fmeans).pvalue), "fam_better_in": int((fmeans < 0).sum()),
+                        "n_families": len(ufam), "fam_ci90_lo": lo90, "fam_ci90_hi": hi90,
+                        "equivalent_within_margin": bool(lo90 > -MARGIN and hi90 < MARGIN)})
     R = pd.DataFrame(res)
     R.to_csv(out / "paired.csv", index=False)
     pd.set_option("display.width", 200)

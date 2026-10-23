@@ -60,10 +60,14 @@ python scripts/paper_numbers.py && python scripts/paper_tables.py && python scri
 | `exp_baselines.py` | 8 composition models under identical hold-out / LOMO / LOFO folds | ~10 min |
 | `exp_audit.py` | n-profile without the withheld mix, offset from training mixes, paired mix-level statistics | ~1 min |
 | `exp_inner_cv.py` | hyper-parameter check by inner CV on the training mixes only | ~6 min |
+| `exp_mlp_icv.py` | data-driven network with the inner-CV setting, all schemes (run before `exp_audit.py`) | ~5 min |
 | `exp_robustness.py` | noise, correlated digitisation error, time-origin error, curve-reconstruction variants | ~15 min |
 | `exp_data_efficiency.py [truncation]` | number of training mixes; truncated training curves | ~15 min |
 | `exp_pen_shrinkage.py` | why the original PENN shrinks K_int (synthetic data only) | ~5 min |
 | `exp_pen_r_holdout.py` | revised PENN parameters of all mixes (hold-out models) | seconds |
+| `exp_interval_calibration.py` | coverage of the profile intervals under AR(1) errors (100 replicates per mix) | long-running (minutes to an hour on one core) |
+| `calibrated_intervals.py` | simulation-calibrated 95 % profile intervals | seconds |
+| `curing_age_check.py` | time to 70 % saturation vs the 28-day values of the source | ~1 min |
 | `exp_pinn.py` | PINN diagnostics: warm start, fixed classical parameters, λ = 100, synthetic data | ~45 min |
 | `q1_numbers.py`, `q1_tables.py`, `q1_figures.py` | numbers, tables and figures of the manuscript | ~1 min |
 
@@ -88,7 +92,9 @@ unchanged, so the original results are reproduced exactly.
 ## 7. Known limitations
 
 * One dataset, digitised from published figures; curing age and lateral sealing during drying not
-  recorded in the data file; w/b = 0.6 and S20-0.5 unusable.
+  recorded in the data file (28-day curing is supported by `curing_age_check.py`, to be confirmed by
+  the authors); w/b = 0.6 and S20-0.5 unusable. The data file holds 1001 points, of which the 69
+  flagged w/b = 0.6 points are never used; all results use the remaining 932 points.
 * Identified parameters are conditional on fixed constitutive constants (see the sensitivity study).
 * The PINN was evaluated in one formulation (hard-constrained similarity ansatz); other PINN designs
   were not tested.
